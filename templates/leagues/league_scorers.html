@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% block title %}هدافو {{ league.name }}{% endblock %}
+
+{% block content %}
+<div class="container card-3d" style="margin-top: 30px;">
+    
+    <div id="scorers-card-to-save">
+        <h2>⚽ هدافو الدوري - {{ league.name }}</h2>
+
+        <div class="table-responsive">
+            
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>اللاعب</th>
+                        <th>الفريق</th>
+                        <th>عدد الأهداف</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for scorer in scorers %}
+                    <tr>
+                        <td>{{ scorer.player_name }}</td>
+                        <td>
+                            {% if scorer.team.logo %}
+                                <img src="{{ scorer.team.logo.url }}" width="25" height="25" alt="" class="table-team-logo">
+                            {% endif %}
+                            {{ scorer.team.name }}
+                        </td>
+                        <td class="goals-count">{{ scorer.goals }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" style="text-align: center;">لا يوجد هدافين بعد.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div> <div class="bottom-buttons-wrapper">
+        {% if user == league.owner %}
+            <a href="{% url 'league_scorers_update' league.id %}" class="btn btn-modern btn-outline-yellow mt-3">✏️ تعديل الهدافين</a>
+        {% endif %}
+        <button type="button" id="download-scorers-btn" class="btn btn-modern mt-3">💾 حفظ كصورة</button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 1. تنسيق العنوان الموحد */
+    h2 {
+        color: var(--phosphor-yellow, #CCFF00); 
+        font-weight: bold;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        margin-bottom: 30px; 
+    }
+    h2:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        right: 0; 
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--phosphor-yellow, #CCFF00), var(--phosphor-yellow, #CCFF00));
+        border-radius: 2px;
+    }
+
+    /* 2. تنسيق الجدول الداكن */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(255, 255, 255, 0.03); 
+    }
+    .table-hover tbody tr:hover {
+        background-color: rgba(228, 255, 0, 0.1); 
+        color: var(--phosphor-yellow, #e4ff00);
+    }
+    .table th, .table td {
+        padding: 0.9rem 0.75rem;
+        vertical-align: middle;
+        border-top: 1px solid rgba(255, 255, 255, 0.1); 
+        text-align: right;
+        white-space: nowrap;
+    }
+    .table thead th {
+        border-top: none;
+        border-bottom: 2px solid var(--phosphor-yellow, #e4ff00);
+        color: var(--phosphor-yellow, #e4ff00);
+        font-weight: 600;
+    }
+
+    /* 3. تنسيقات خاصة بهذه الصفحة */
+    .table-team-logo {
+        width: 25px !important;
+        height: 25px !important;
+        object-fit: cover;
+        border: 1px solid var(--gray, #cebe08);
+        border-radius: 4px;
+        margin-left: 8px; /* مسافة قبل الاسم */
+        vertical-align: middle;
+    }
+    
+    .goals-count {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: var(--phosphor-yellow, #e4ff00);
+        text-align: center !important; /* توسيط رقم الأهداف */
+    }
+    .table thead th:last-child {
+        text-align: center; /* توسيط عنوان "عدد الأهداف" */
+    }
+
+    /* 4. تنسيق الزر الشفاف */
+    .btn-outline-yellow {
+        background: transparent;
+        color: var(--phosphor-yellow, #e4ff00);
+        border: 2px solid var(--phosphor-yellow, #e4ff00);
+        box-shadow: none;
+    }
+    .btn-outline-yellow:hover {
+        background: var(--phosphor-yellow, #e4ff00);
+        color: var(--dark-black, #111);
+        box-shadow: 0 5px 15px rgba(228, 255, 0, 0.3);
+    }
+    
+    /* ⬇️ 5. إضافة تنسيق حاوية الأزرار ⬇️ */
+    .bottom-buttons-wrapper {
+        display: flex;
+        justify-content: center; /* توسيط الأزرار */
+        align-items: center;
+        gap: 15px; /* مسافة بين الأزرار */
+        margin-top: 20px; /* فصل الأزرار عن الجدول */
+    }
+    .bottom-buttons-wrapper .btn {
+        margin-top: 0 !important; /* إلغاء الـ mt-3 الافتراضي */
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    
+    const downloadBtn = document.getElementById('download-scorers-btn');
+    const cardElement = document.getElementById('scorers-card-to-save');
+
+    if (!downloadBtn || !cardElement) {
+        console.error('لم يتم العثور على زر التحميل أو حاوية الهدافين.');
+        return;
+    }
+
+    downloadBtn.addEventListener('click', function(e) {
+        e.stopPropagation(); 
+        
+        const originalButtonText = this.textContent;
+        this.textContent = '...جاري التحضير';
+        
+        html2canvas(cardElement, {
+            backgroundColor: "#131201", // لون الخلفية الداكن
+            scale: 2, // جودة عالية
+            useCORS: true // للسماح بتحميل شعارات الفرق
+        }).then(canvas => {
+            const leagueName = "{{ league.name|escapejs }}"; // اسم الدوري لاسم الملف
+
+            const link = document.createElement('a');
+            link.download = `scorers-${leagueName}.png`;
+            link.href = canvas.toDataURL('image/png');
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            this.textContent = originalButtonText; // إعادة نص الزر
+
+        }).catch(err => {
+            console.error('html2canvas error:', err);
+            this.textContent = '❌ فشل';
+            setTimeout(() => { this.textContent = originalButtonText; }, 3000);
+        });
+    });
+});
+</script>
+{% endblock %}

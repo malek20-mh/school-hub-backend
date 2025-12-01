@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}{% if form.instance.pk %}تعديل مباراة{% else %}إضافة مباراة{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container card-3d" style="max-width: 800px; margin-top: 30px;">
+    
+    <h2>{% if form.instance.pk %}✏️ تعديل مباراة{% else %}➕ إضافة مباراة{% endif %} - {{ league.name }}</h2>
+    
+    <form method="post" class="modern-form">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+        
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-modern">{% if form.instance.pk %}حفظ التعديلات{% else %}إضافة{% endif %}</button>
+            <a href="{% url 'league_matches' league.id %}" class="btn btn-modern btn-outline-modern">رجوع</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 1. جلب تنسيق العنوان من الصفحة السابقة */
+    h2 {
+        /* استخدام المتغيرات من base.html مع لون احتياطي */
+        color: var(--phosphor-yellow, #CCFF00); 
+        font-weight: bold;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        margin-bottom: 30px; /* زيادة المسافة تحت العنوان */
+    }
+    h2:after {
+        content: '';
+        position: absolute;
+        bottom: -10px; /* مسافة الخط عن النص */
+        right: 0; 
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--phosphor-yellow, #CCFF00), var(--phosphor-yellow, #CCFF00));
+        border-radius: 2px;
+    }
+
+    /* 2. تنسيق الحقول التي ينشئها {{ form.as_p }} */
+    /* .as_p ينشئ وسم <p> لكل حقل */
+    .modern-form p {
+        margin-bottom: 1.5rem; /* مسافة بين كل حقل والذي يليه */
+    }
+    
+    /* تنسيق عناوين الحقول (Labels) */
+    .modern-form p label {
+        color: var(--white, #fff);
+        margin-bottom: 8px; /* مسافة بين العنوان ومربع الإدخال */
+        display: block;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+    
+    /* ملاحظة: تنسيق حقول الإدخال (input) والاختيار (select)
+       موجود مسبقاً في "base.html" تحت كلاس .modern-form
+       لذلك لا نحتاج لتكراره هنا.
+    */
+    
+    /* 3. تنسيق حاوية الأزرار */
+    .form-buttons {
+        margin-top: 30px; /* مسافة فوق الأزرار */
+        display: flex;
+        gap: 15px; /* مسافة بين الأزرار */
+    }
+
+    /* 4. تنسيق زر "رجوع" (زر ثانوي شفاف) */
+    .btn-outline-modern {
+        background: transparent;
+        /* استخدام المتغيرات من base.html */
+        border: 2px solid var(--gray, #cebe08);
+        color: var(--gray, #cebe08);
+        box-shadow: none; /* إلغاء الظل الافتراضي للزر الأصفر */
+    }
+    .btn-outline-modern:hover {
+        background: var(--gray, #cebe08);
+        color: var(--dark-black, #111);
+        box-shadow: 0 5px 15px rgba(206, 190, 8, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// لا حاجة لسكريبت هنا حالياً
+</script>
+{% endblock %}

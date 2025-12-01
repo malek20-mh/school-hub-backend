@@ -1,0 +1,284 @@
+{% extends "base.html" %}
+{% block title %}تعديل بيانات الملعب{% endblock %}
+
+{% block content %}
+<style>
+    :root {
+        --dark-black: #1a1a1a;
+        --phosphor-yellow: #e6ff04;
+        --dark-gray: #2d2d2d;
+        --light-gray: #444;
+        --accent-glow: 0 0 10px rgba(230, 255, 4, 0.7);
+    }
+    
+    body {
+        background: linear-gradient(135deg, var(--dark-black) 0%, #2a2a2a 100%);
+        color: #f0f0f0;
+        min-height: 100vh;
+    }
+    
+    .container {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    h2 {
+        color: var(--phosphor-yellow);
+        text-shadow: var(--accent-glow);
+        font-weight: bold;
+        position: relative;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--phosphor-yellow);
+    }
+    
+    h2:after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: rgba(230, 255, 4, 0.3);
+    }
+    
+    .card {
+        background: var(--dark-gray);
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 
+                    var(--accent-glow),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    
+    .card:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--phosphor-yellow);
+        box-shadow: var(--accent-glow);
+    }
+    
+    .alert {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .alert:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+    }
+    
+    .alert-success {
+        background: rgba(40, 167, 69, 0.15);
+        color: #d4edda;
+        border-left: 5px solid #28a745;
+    }
+    
+    .alert-error, .alert-danger {
+        background: rgba(220, 53, 69, 0.15);
+        color: #f8d7da;
+        border-left: 5px solid #dc3545;
+    }
+    
+    .alert-info {
+        background: rgba(23, 162, 184, 0.15);
+        color: #d1ecf1;
+        border-left: 5px solid #17a2b8;
+    }
+    
+    .alert-warning {
+        background: rgba(255, 193, 7, 0.15);
+        color: #fff3cd;
+        border-left: 5px solid #ffc107;
+    }
+    
+    .form-control {
+        background: var(--light-gray);
+        border: 1px solid #555;
+        border-radius: 8px;
+        color: #f0f0f0;
+        transition: all 0.3s;
+        padding: 12px 15px;
+    }
+    
+    .form-control:focus {
+        background: #3a3a3a;
+        border-color: var(--phosphor-yellow);
+        box-shadow: 0 0 0 0.2rem rgba(230, 255, 4, 0.25);
+        color: #fff;
+    }
+    
+    label {
+        color: #ddd;
+        font-weight: 600;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    .btn {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s;
+        padding: 10px 20px;
+        position: relative;
+        overflow: hidden;
+        border: none;
+    }
+    
+    .btn:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+        }
+    
+    .btn:hover:before {
+        left: 100%;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--phosphor-yellow) 0%, #c2d400 100%);
+        color: var(--dark-black);
+        box-shadow: 0 4px 15px rgba(230, 255, 4, 0.3);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(230, 255, 4, 0.4);
+        color: var(--dark-black);
+    }
+    
+    .btn-secondary {
+        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+        color: white;
+        box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+    }
+    
+    .btn-secondary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+        color: white;
+    }
+    
+    /* تخصيص عناصر الفورم */
+    form p {
+        margin-bottom: 1.5rem;
+        position: relative;
+    }
+    
+    form p:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(230, 255, 4, 0.3), transparent);
+    }
+    
+    /* تأثيرات ثلاثية الأبعاد للأزرار */
+    .btn-3d {
+        transform-style: preserve-3d;
+        perspective: 1000px;
+    }
+    
+    .btn-3d:active {
+        transform: translateY(4px);
+    }
+    
+    /* أيقونات مخصصة */
+    .icon-field {
+        position: relative;
+    }
+    
+    .icon-field:before {
+        content: '⚽';
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 1.2rem;
+        z-index: 5;
+    }
+</style>
+
+<div class="container mt-4" style="max-width: 600px;">
+    <h2 class="mb-4">✏️ تعديل بيانات الملعب: {{ field.name }}</h2>
+
+    <!-- ✅ رسائل التنبيه -->
+    {% if messages %}
+        <div class="mb-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" class="card p-4 shadow-sm">
+        {% csrf_token %}
+        
+        <!-- ✅ عرض الفورم مع Bootstrap -->
+        {{ form.as_p }}
+
+        <div class="d-flex justify-content-between mt-3">
+            <button type="submit" class="btn btn-primary btn-3d">💾 حفظ التعديلات</button>
+            <a href="{% url 'stadium_detail' field.stadium.id %}" class="btn btn-secondary btn-3d">↩️ رجوع</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // إضافة تأثيرات تفاعلية إضافية
+    document.addEventListener('DOMContentLoaded', function() {
+        // إضافة تأثير عند التركيز على الحقول
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('icon-field');
+            });
+            
+            input.addEventListener('blur', function() {
+                if (this.value === '') {
+                    this.parentElement.classList.remove('icon-field');
+                }
+            });
+        });
+        
+        // تأثيرات للبطاقات عند التمرير
+        const card = document.querySelector('.card');
+        window.addEventListener('scroll', function() {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.5;
+        });
+    });
+</script>
+{% endblock %}

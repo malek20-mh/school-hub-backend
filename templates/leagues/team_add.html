@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}إضافة الفرق{% endblock %}
+
+{% block content %}
+<div class="container card-3d">
+    <h2>➕ إضافة الفرق للدوري: {{ league.name }}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ formset.management_form }}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>اسم الفريق</th>
+                    <th>الشعار</th>
+                    <th>المجموعة</th>
+                    <th>حذف؟</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                {{ form.id }}
+                <tr>
+                    <td>{{ form.name }}</td>
+                    <td>{{ form.logo }}</td>
+                    <td>{{ form.group }}</td>
+                    <td>{{ form.DELETE }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-success btn-modern">حفظ الفرق</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>.card-3d{padding:20px;background:#fff;border-radius:12px;}</style>
+{% endblock %}

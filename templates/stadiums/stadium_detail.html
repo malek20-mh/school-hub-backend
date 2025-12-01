@@ -1,0 +1,437 @@
+{% extends "base.html" %}
+{% block title %}تفاصيل الملعب - {{ stadium.name }}{% endblock %}
+
+{% block content %}
+<style>
+    /* أنماط التصميم العصري */
+    :root {
+        --sky-blue: #bcee07;
+        --phosphor-yellow: #CCFF00;
+        --dark-blue: #bcee07;
+        --light-gray: #000000;
+        --accent-shadow: rgba(0, 4, 8, 0.3);
+    }
+    
+    body {
+        background: linear-gradient(135deg, var(--light-gray) 0%,  #232600 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .container {
+        max-width: 1200px;
+    }
+    
+    h2 {
+        color:  #bcee07;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        padding-bottom: 10px;
+    }
+    
+    h2:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--sky-blue), var(--phosphor-yellow));
+        border-radius: 2px;
+    }
+    
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+        background: rgb(21, 19, 0);
+        margin-bottom: 25px;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    }
+    
+    .card-header {
+        background: linear-gradient(135deg, var(--dark-blue) 0%, #0e1200 100%);
+        color:  #bcee07;
+        border-bottom: none;
+        padding: 15px 20px;
+        border-radius: 15px 15px 0 0 !important;
+    }
+    
+    .card-header h5 {
+        margin: 0;
+        font-weight: 600;
+    }
+    
+    .btn {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .btn:hover:after {
+        left: 100%;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg,  #bcee07 0%,  #bcee07 100%);
+        border: none;
+        box-shadow: 0 4px 15px var(--accent-shadow);
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #e2d95d 0%,  #bcee07 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px var(--accent-shadow);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, #90a728 0%, #20c997 100%);
+        border: none;
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    .btn-success:hover {
+        background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+    }
+    
+    .btn-outline-primary {
+        color:  #bcee07;
+        border: 2px solid  #bcee07;
+        background: transparent;
+    }
+    
+    .btn-outline-primary:hover {
+        background:rgba(38, 29, 1, 0.2);
+        color: rgb(252, 252, 253);
+        border-color:  #bcee07;
+    }
+    
+    .btn-secondary {
+        background: linear-gradient(135deg, #181000 0%, #140105 100%);
+        border:  #bcee07;
+    }
+    
+.form-control {
+    background-color: #181700;  
+    border: 1px solid  #bcee07;  
+    color:  #bcee07;  
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    background-color: #221f01;  
+    border-color: #bcee07;  
+    box-shadow: 0 0 0 3px  #bcee07;  
+    color: #f0f0f0; 
+}
+    
+    .alert {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+    
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+    }
+    
+    .table th {
+        background: linear-gradient(135deg, var(--light-gray) 0%, #151700 100%);
+        color:  #bcee07;
+        font-weight: 600;
+        border: none;
+        padding: 15px 10px;
+    }
+    
+    .table td {
+        padding: 15px 10px;
+        border-bottom: 1px solid #242200;
+        vertical-align: middle;
+    }
+    
+    .table tbody tr {
+        transition: background 0.3s ease;
+    }
+    
+    .table tbody tr:hover {
+        background: rgba(112, 98, 27, 0.05);
+    }
+    
+    .img-fluid {
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        transition: transform 0.3s ease;
+    }
+    
+    .img-fluid:hover {
+        transform: scale(1.03);
+    }
+    
+    .text-success {
+        color: #bcee07 !important;
+        font-weight: 600;
+    }
+    
+    .text-warning {
+        color: #ffc107 !important;
+        font-weight: 600;
+    }
+    
+    .text-danger {
+        color: #bcee07 !important;
+        font-weight: 600;
+    }
+    
+    .text-muted {
+        color: #b32400 !important;
+    }
+    
+    /* تأثيرات ثلاثية الأبعاد */
+    .shadow-sm {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+    }
+    
+    .shadow-lg {
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1) !important;
+    }
+    
+    /* أيقونات معدلة */
+    h2:before {
+        content: "";
+        margin-left: 10px;
+        font-size: 1.2em;
+        filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+    }
+
+    /* تصميم متجاوب إضافي */
+    @media (max-width: 768px) {
+        .card-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 10px;
+        }
+        
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+    <h2>🏟️ {{ stadium.name }}</h2>
+    <p class="lead" style="color: var(--dark-blue);">📍 {{ stadium.location }}</p>
+
+    <!-- 🖼️ صور الملعب -->
+    {% if stadium.images.exists %}
+        <div class="row mb-4">
+            {% for img in stadium.images.all %}
+                <div class="col-md-3 mb-3">
+                    <div class="image-container">
+                        <img src="{{ img.image.url }}" class="img-fluid rounded shadow-lg" alt="{{ img.caption }}">
+                        <p class="text-muted small mt-2">{{ img.caption }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <hr style="border-top: 2px dashed #E2E8F0;">
+
+    <!-- ✅ رسائل التنبيه -->
+    {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} d-flex align-items-center">
+                    <span class="me-2">
+                        {% if message.tags == 'success' %}✅
+                        {% elif message.tags == 'warning' %}⚠️
+                        {% elif message.tags == 'error' or message.tags == 'danger' %}❌
+                        {% else %}ℹ️{% endif %}
+                    </span>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- 🔍 فلترة -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3 align-items-center">
+                <div class="col-md-4">
+                    <label for="dayInput" class="form-label fw-bold" style="color: var(--dark-blue);">اختر التاريخ</label>
+                    <input type="date" name="day" class="form-control shadow-sm" id="dayInput" value="{{ day|date:'Y-m-d' }}">
+                </div>
+                <div class="col-md-4">
+                    <div class="form-check mt-4">
+                        <input type="checkbox" name="only_available" value="1" class="form-check-input" id="onlyAvailableCheck"
+                               {% if only_available %}checked{% endif %}>
+                        <label class="form-check-label fw-medium" for="onlyAvailableCheck">عرض الأوقات المتاحة فقط</label>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary w-100 mt-4 py-2">
+                        <span class="me-2">🔍</span>تصفية النتائج
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 🏟️ الملاعب الفرعية -->
+    {% for fdata in all_fields %}
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
+                <h5 class="mb-0 d-flex align-items-center">
+                    <span class="me-2">🥅</span>
+                    {{ fdata.field.name }}
+                    {% if fdata.field.area %}
+                        <span class="badge bg-light text-dark ms-2">📐 {{ fdata.field.area }} م²</span>
+                    {% endif %}
+                </h5>
+                <a href="{% url 'field_schedule' fdata.field.id %}" class="btn btn-outline-primary btn-sm mt-2 mt-md-0">
+                    <span class="me-1">📅</span>عرض الجدول الأسبوعي
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>من</th>
+                                <th>إلى</th>
+                                <th>الحالة</th>
+                                <th>الإجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for slot in fdata.slots %}
+                                <tr>
+                                    <td class="fw-bold">{{ slot.start|time:"H:i" }}</td>
+                                    <td class="fw-bold">{{ slot.end|time:"H:i" }}</td>
+                                    <td>
+                                        {% if slot.status == "available" %}
+                                            <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                                <span class="me-1">✅</span>متاح
+                                            </span>
+                                        {% elif slot.status == "pending" %}
+                                            <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
+                                                <span class="me-1">⏳</span>بانتظار التأكيد
+                                            </span>
+                                        {% elif slot.status == "confirmed" %}
+                                            <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
+                                                <span class="me-1">✔️</span>محجوز
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-secondary bg-opacity-10 text-muted border border-secondary border-opacity-25">
+                                                <span class="me-1">🚫</span>غير متاح
+                                            </span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if slot.status == "available" %}
+                                        <!-- 📝 فورم الحجز مع بيانات المستخدم -->
+                                            <form method="post" action="{% url 'create_booking' fdata.field.id %}" class="text-start p-2 bg-light rounded">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="start" value="{{ slot.start|date:'Y-m-d H:i' }}">
+
+                                                <div class="mb-2">
+                                                    <input type="text" name="full_name" class="form-control form-control-sm" placeholder="الاسم الكامل" required>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <input type="number" name="age" class="form-control form-control-sm" placeholder="العمر" required>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <input type="text" name="address" class="form-control form-control-sm" placeholder="الموقع" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <input type="tel" name="phone" class="form-control form-control-sm" placeholder="رقم الهاتف" required>
+                                                </div>
+
+                                                <button type="submit" class="btn btn-success btn-sm w-100 py-2">
+                                                    <span class="me-1">📋</span>احجز الآن
+                                                </button>
+                                            </form>
+
+                                        {% elif slot.status == "pending" and user == stadium.owner and slot.booking %}
+                                            <!-- 👤 بيانات الحاجز -->
+                                            <div class="mb-3 text-start small border rounded p-3 bg-light">
+                                                <h6 class="fw-bold mb-2" style="color: var(--dark-blue);">👤 معلومات الحجز</h6>
+                                                <div class="row">
+                                                    <div class="col-6"><strong>الاسم:</strong></div>
+                                                    <div class="col-6">{{ slot.booking.full_name }}</div>
+                                                    <div class="col-6"><strong>العمر:</strong></div>
+                                                    <div class="col-6">{{ slot.booking.age }}</div>
+                                                    <div class="col-6"><strong>الموقع:</strong></div>
+                                                    <div class="col-6">{{ slot.booking.address }}</div>
+                                                    <div class="col-6"><strong>الهاتف:</strong></div>
+                                                    <div class="col-6">{{ slot.booking.phone }}</div>
+                                                </div>
+                                            </div>
+
+                                            <!-- ✅ تأكيد/رفض -->
+                                            <form method="post" action="{% url 'booking_action' slot.booking_id %}" class="d-flex gap-2">
+                                                {% csrf_token %}
+                                                <button type="submit" name="action" value="approve" class="btn btn-primary btn-sm flex-fill">
+                                                    <span class="me-1">✅</span>تأكيد
+                                                </button>
+                                                <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm flex-fill">
+                                                    <span class="me-1">❌</span>رفض
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-muted">
+                                        <span class="me-2">📭</span>لا توجد فترات زمنية لهذا اليوم.
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <span class="display-4 d-block mb-3">🚫</span>
+                <h5 class="text-muted">لا يوجد ملاعب فرعية مرتبطة بهذا الاستاد.</h5>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="mt-4 text-center">
+        <a href="{% url 'stadium_list' %}" class="btn btn-secondary px-4 py-2">
+            <span class="me-2">↩️</span>رجوع إلى قائمة الملاعب
+        </a>
+    </div>
+</div>
+{% endblock %}

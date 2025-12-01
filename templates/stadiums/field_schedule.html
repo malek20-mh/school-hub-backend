@@ -1,0 +1,370 @@
+{% extends "base.html" %}
+{% block title %}جدول الأسبوع - {{ field.name }}{% endblock %}
+
+{% block content %}
+<style>
+    /* أنماط التصميم العصري */
+    :root {
+        --sky-blue: #87CEEB;
+        --phosphor-yellow: #CCFF00;
+        --dark-blue: #1E3A5F;
+        --light-gray: #F5F7FA;
+        --accent-shadow: rgba(135, 206, 235, 0.3);
+    }
+    
+    body {
+        background: linear-gradient(135deg, var(--light-gray) 0%, #E0F7FF 100%);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .container {
+        max-width: 1400px;
+    }
+    
+    h2 {
+        color: var(--dark-blue);
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    
+    h2:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--sky-blue), var(--phosphor-yellow));
+        border-radius: 2px;
+    }
+    
+    .table-container {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        overflow: hidden;
+        margin-bottom: 30px;
+    }
+    
+    .table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        margin: 0;
+    }
+    
+    .table thead th {
+        background: linear-gradient(135deg, var(--dark-blue) 0%, #2C5282 100%);
+        color: white;
+        font-weight: 600;
+        border: none;
+        padding: 15px 10px;
+        text-align: center;
+        vertical-align: middle;
+    }
+    
+    .table tbody td {
+        padding: 15px 10px;
+        border-bottom: 1px solid #E2E8F0;
+        vertical-align: middle;
+        text-align: center;
+    }
+    
+    .table tbody tr {
+        transition: background 0.3s ease;
+    }
+    
+    .table tbody tr:hover {
+        background: rgba(135, 206, 235, 0.05);
+    }
+    
+    .table tbody tr:nth-child(even) {
+        background-color: #f8fafc;
+    }
+    
+    .table tbody tr:nth-child(even):hover {
+        background: rgba(135, 206, 235, 0.08);
+    }
+    
+    .btn {
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        border: none;
+    }
+    
+    .btn:after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .btn:hover:after {
+        left: 100%;
+    }
+    
+    .btn-primary {
+        background: linear-gradient(135deg, var(--sky-blue) 0%, #5DADE2 100%);
+        box-shadow: 0 4px 15px var(--accent-shadow);
+    }
+    
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #5DADE2 0%, var(--sky-blue) 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px var(--accent-shadow);
+    }
+    
+    .btn-success {
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    }
+    
+    .btn-success:hover {
+        background: linear-gradient(135deg, #20c997 0%, #28a745 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+    }
+    
+    .btn-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+    }
+    
+    .btn-danger:hover {
+        background: linear-gradient(135deg, #c82333 0%, #dc3545 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+    }
+    
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #E2E8F0;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+    }
+    
+    .form-control:focus {
+        border-color: var(--sky-blue);
+        box-shadow: 0 0 0 3px var(--accent-shadow);
+    }
+    
+    .alert {
+        border-radius: 10px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-bottom: 25px;
+    }
+    
+    .badge {
+        border-radius: 6px;
+        padding: 6px 10px;
+        font-weight: 600;
+    }
+    
+    .booking-info {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 8px;
+        padding: 12px;
+        text-align: right;
+        border-left: 4px solid var(--sky-blue);
+    }
+    
+    .booking-info b {
+        color: var(--dark-blue);
+        display: block;
+        margin-bottom: 5px;
+    }
+    
+    .empty-slot {
+        color: #6c757d;
+        font-style: italic;
+    }
+    
+    .day-highlight {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border-radius: 6px;
+        padding: 3px 8px;
+        font-weight: 600;
+        color: #856404;
+        display: inline-block;
+    }
+    
+    /* أيقونات معدلة */
+    h2:before {
+        content: "📅";
+        margin-left: 10px;
+        font-size: 1.2em;
+        filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+    }
+    
+    /* تصميم متجاوب للجدول */
+    @media (max-width: 992px) {
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        .table {
+            min-width: 900px;
+        }
+        
+        .btn-sm {
+            padding: 6px 10px;
+            font-size: 0.8rem;
+        }
+        
+        .form-control {
+            font-size: 0.8rem;
+            padding: 6px 10px;
+        }
+    }
+</style>
+
+<div class="container mt-4">
+    <h2>📅 جدول الأسبوع للملعب: {{ field.name }}</h2>
+    <p class="lead" style="color: var(--dark-blue);">
+        <span class="fw-bold">الاستاد:</span> {{ field.stadium.name }} | 
+        <span class="ms-3">📍</span> {{ field.stadium.location }}
+    </p>
+
+    <!-- ✅ رسائل التنبيه -->
+    {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} d-flex align-items-center">
+                    <span class="me-2">
+                        {% if message.tags == 'success' %}✅
+                        {% elif message.tags == 'warning' %}⚠️
+                        {% elif message.tags == 'error' or message.tags == 'danger' %}❌
+                        {% else %}ℹ️{% endif %}
+                    </span>
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="table-container">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th width="12%">اليوم</th>
+                    <th width="10%">من</th>
+                    <th width="10%">إلى</th>
+                    <th width="12%">الحالة</th>
+                    <th width="30%">البيانات</th>
+                    <th width="26%">الإجراء</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for day_data in week_slots %}
+                    {% for slot in day_data.slots %}
+                        <tr>
+                            <td>
+                                <span class="day-highlight">{{ day_data.day|date:"Y-m-d" }}</span>
+                            </td>
+                            <td class="fw-bold">{{ slot.start|time:"H:i" }}</td>
+                            <td class="fw-bold">{{ slot.end|time:"H:i" }}</td>
+                            <td>
+                                {% if slot.status == "available" %}
+                                    <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">
+                                        <span class="me-1">✅</span>متاح
+                                    </span>
+                                {% elif slot.status == "pending" %}
+                                    <span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25">
+                                        <span class="me-1">⏳</span>بانتظار التأكيد
+                                    </span>
+                                {% elif slot.status == "confirmed" %}
+                                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">
+                                        <span class="me-1">✔️</span>مؤكد
+                                    </span>
+                                {% elif slot.status == "canceled" %}
+                                    <span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">
+                                        <span class="me-1">🚫</span>ملغي
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary bg-opacity-10 text-muted border border-secondary border-opacity-25">
+                                        غير متاح
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if slot.booking %}
+                                    <div class="booking-info">
+                                        <b>👤 {{ slot.booking.full_name }}</b>
+                                        <div class="small">
+                                            <span class="me-2">📞 {{ slot.booking.phone }}</span> |
+                                            <span class="mx-2">📍 {{ slot.booking.address }}</span> |
+                                            <span class="ms-2">🎂 {{ slot.booking.age }} سنة</span>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <span class="empty-slot">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if slot.status == "available" %}
+                                    <!-- 📝 المستخدم يحجز -->
+                                    <form method="post" action="{% url 'create_booking' field.id %}" class="text-start p-2 bg-light rounded">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="start" value="{{ slot.start|date:'Y-m-d H:i' }}">
+
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <input type="text" name="full_name" class="form-control form-control-sm" placeholder="الاسم الكامل" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="number" name="age" class="form-control form-control-sm" placeholder="العمر" required>
+                                            </div>
+                                            <div class="col-6">
+                                                <input type="tel" name="phone" class="form-control form-control-sm" placeholder="رقم الهاتف" required>
+                                            </div>
+                                            <div class="col-12">
+                                                <input type="text" name="address" class="form-control form-control-sm" placeholder="الموقع" required>
+                                                </div>
+                                            <div class="col-12">
+                                                <button type="submit" class="btn btn-success btn-sm w-100 py-2">
+                                                    <span class="me-1">📋</span>احجز الآن
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+
+                                {% elif slot.status == "pending" and user == field.stadium.owner %}
+                                    <!-- ✅ المالك يقدر يأكد/يلغي -->
+                                    <div class="d-flex gap-2 justify-content-center">
+                                        <form method="post" action="{% url 'booking_action' slot.booking_id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" name="action" value="approve" class="btn btn-primary btn-sm">
+                                                <span class="me-1">✅</span>تأكيد
+                                            </button>
+                                        </form>
+                                        <form method="post" action="{% url 'booking_action' slot.booking_id %}">
+                                            {% csrf_token %}
+                                            <button type="submit" name="action" value="reject" class="btn btn-danger btn-sm">
+                                                <span class="me-1">❌</span>رفض
+                                            </button>
+                                        </form>
+                                    </div>
+                                {% else %}
+                                    <span class="empty-slot">-</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

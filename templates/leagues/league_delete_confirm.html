@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}حذف {{ league.name }}{% endblock %}
+
+{% block content %}
+<div class="container card-3d" style="margin-top: 30px; max-width: 800px;">
+    
+    <h2>🗑️ حذف الدوري</h2>
+    
+    <p class="confirmation-text">هل أنت متأكد من حذف الدوري <strong>{{ league.name }}</strong>؟ لا يمكن التراجع عن هذا الإجراء.</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-modern btn-danger-modern">نعم، حذف</button>
+            <a href="{% url 'league_detail' league.id %}" class="btn btn-modern btn-outline-modern">إلغاء</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 1. تنسيق العنوان الرئيسي H2 */
+    h2 {
+        color: var(--phosphor-yellow, #CCFF00); 
+        font-weight: bold;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        margin-bottom: 30px; 
+    }
+    h2:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        right: 0; 
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--phosphor-yellow, #CCFF00), var(--phosphor-yellow, #CCFF00));
+        border-radius: 2px;
+    }
+
+    /* 2. تنسيق نص التأكيد */
+    .confirmation-text {
+        color: var(--white, #fff);
+        font-size: 1.2rem;
+        line-height: 1.7;
+    }
+    .confirmation-text strong {
+        color: var(--phosphor-yellow, #e4ff00);
+        font-weight: 600;
+    }
+
+    /* 3. تنسيق حاوية الأزرار */
+    .form-buttons {
+        margin-top: 30px; 
+        display: flex;
+        gap: 15px; 
+    }
+
+    /* 4. تنسيق زر الحذف (الأحمر) */
+    .btn-danger-modern {
+        background: #d9534f; /* لون أحمر */
+        color: #fff;
+        border: none;
+        box-shadow: 0 5px 15px rgba(217, 83, 79, 0.3);
+    }
+    .btn-danger-modern:hover {
+        background: #c9302c; /* لون أحمر أغمق */
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(217, 83, 79, 0.4);
+    }
+
+    /* 5. تنسيق زر الإلغاء (الشفاف) */
+    .btn-outline-modern {
+        background: transparent;
+        border: 2px solid var(--gray, #cebe08);
+        color: var(--gray, #cebe08);
+        box-shadow: none; 
+    }
+    .btn-outline-modern:hover {
+        background: var(--gray, #cebe08);
+        color: var(--dark-black, #111);
+        box-shadow: 0 5px 15px rgba(206, 190, 8, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// لا حاجة لسكريبت هنا، التأثيرات موجودة في base.html
+</script>
+{% endblock %}

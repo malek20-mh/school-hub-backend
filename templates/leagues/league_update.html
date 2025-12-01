@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}تعديل الدوري{% endblock %}
+
+{% block content %}
+<div class="container card-3d" style="margin-top: 30px;">
+    
+    <h2>✏️ تعديل بيانات الدوري</h2>
+    
+    <form method="post" enctype="multipart/form-data" class="modern-form">
+        {% csrf_token %}
+        
+        <h3>📋 بيانات الدوري</h3>
+        <div class="form-section-wrapper">
+            {{ form.as_p }}
+        </div>
+
+        <h3 class="mt-4">📂 المجموعات</h3>
+        {{ group_formset.management_form }}
+        
+        <div class="table-responsive mb-4">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th class="text-center" style="width: 100px;">حذف؟</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in group_formset %}
+                        {{ f.id }}
+                        <tr>
+                            <td>{{ f.name }}</td>
+                            <td class="text-center">{{ f.DELETE }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h3 class="mt-4">👥 الفرق</h3>
+        {{ team_formset.management_form }}
+        
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>الشعار</th>
+                        <th>المجموعة</th>
+                        <th class="text-center" style="width: 100px;">حذف؟</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in team_formset %}
+                        {{ f.id }}
+                        <tr>
+                            <td>{{ f.name }}</td>
+                            <td>{{ f.logo }}</td>
+                            <td>{{ f.group }}</td>
+                            <td class="text-center">{{ f.DELETE }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-modern">💾 حفظ</button>
+            <a href="{% url 'league_list' %}" class="btn btn-modern btn-outline-modern">رجوع</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 1. تنسيق العنوان الرئيسي H2 */
+    h2 {
+        color: var(--phosphor-yellow, #CCFF00); 
+        font-weight: bold;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        position: relative;
+        margin-bottom: 30px; 
+    }
+    h2:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        right: 0; 
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--phosphor-yellow, #CCFF00), var(--phosphor-yellow, #CCFF00));
+        border-radius: 2px;
+    }
+
+    /* 2. تنسيق العناوين الفرعية H3 */
+    h3 {
+        color: var(--gray, #cebe08);
+        font-weight: 600;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 10px;
+    }
+
+    /* 3. تنسيق حقول {{ form.as_p }} (منسوخ من صفحة إضافة مباراة) */
+    .modern-form p {
+        margin-bottom: 1.5rem; 
+    }
+    .modern-form p label {
+        color: var(--white, #fff);
+        margin-bottom: 8px; 
+        display: block;
+        font-weight: 500;
+        font-size: 1.1rem;
+    }
+    .form-section-wrapper {
+        background: rgba(0,0,0,0.1);
+        padding: 20px;
+        border-radius: 8px;
+    }
+
+    /* 4. تنسيق الجدول الداكن (منسوخ من الصفحات السابقة) */
+    .table-responsive {
+        overflow-x: auto;
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(255, 255, 255, 0.03); 
+    }
+    .table-hover tbody tr:hover {
+        background-color: rgba(228, 255, 0, 0.1); 
+    }
+    .table th, .table td {
+        padding: 0.9rem 0.75rem;
+        vertical-align: middle;
+        border-top: 1px solid rgba(255, 255, 255, 0.1); 
+        text-align: right;
+    }
+    .table thead th {
+        border-top: none;
+        border-bottom: 2px solid var(--phosphor-yellow, #e4ff00);
+        color: var(--phosphor-yellow, #e4ff00);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    /* 5. [مهم] تعديل الحقول (inputs) داخل الجداول */
+    /* كلاس .modern-form في base.html يضيف margin-bottom: 1rem للحقول، يجب إلغاؤه داخل الجدول */
+    .table td input,
+    .table td select {
+        margin-bottom: 0 !important;
+        /* نجعل الحقول أغمق قليلاً داخل الجدول */
+        background: rgba(0, 0, 0, 0.2); 
+    }
+    
+    /* تنسيق خاص لمربع الحذف [DELETE] */
+    .table td input[type="checkbox"] {
+        width: 20px !important;  /* إلغاء width: 100% */
+        height: 20px !important;
+        min-width: auto;
+        margin: 0 auto;
+        display: block;
+    }
+    .text-center { text-align: center !important; }
+
+    /* 6. تنسيق الأزرار (منسوخ من صفحة إضافة مباراة) */
+    .form-buttons {
+        margin-top: 30px; 
+        display: flex;
+        gap: 15px; 
+    }
+    .btn-outline-modern {
+        background: transparent;
+        border: 2px solid var(--gray, #cebe08);
+        color: var(--gray, #cebe08);
+        box-shadow: none; 
+    }
+    .btn-outline-modern:hover {
+        background: var(--gray, #cebe08);
+        color: var(--dark-black, #111);
+        box-shadow: 0 5px 15px rgba(206, 190, 8, 0.3);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// لا حاجة لسكريبت هنا، التأثيرات موجودة في base.html
+</script>
+{% endblock %}

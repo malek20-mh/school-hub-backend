@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+{% block title %}{{ league.name }}{% endblock %}
+
+{% block content %}
+<div class="container league-container card-3d">
+    
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        
+        <div class="league-info-and-buttons">
+            <div class="league-buttons-wrapper">
+                {% if user == league.owner %}
+                    <a href="{% url 'league_update' league.pk %}" class="btn btn-warning btn-modern">✏️ تعديل الدوري</a>
+                    <a href="{% url 'league_delete' league.pk %}" class="btn btn-danger btn-modern">🗑️ حذف الدوري</a>
+                {% endif %}
+                <a href="{% url 'league_matches' league.id %}" class="btn btn-primary btn-modern">📅 عرض المواجهات</a>
+                <a href="{% url 'league_scorers' league.id %}" class="btn btn-success btn-modern">⚽ عرض الهدافين</a>
+            </div>
+        </div>
+
+        <div class="league-logo-container">
+            {% if league.logo %}
+                <img src="{{ league.logo.url }}" alt="{{ league.name }} logo" class="league-logo-detail">
+            {% endif %}
+            <h2>{{ league.name }}</h2> 
+        </div>
+        
+    </div>
+    
+    {% for group_name, standings in league_standings %}
+      
+      <div class="group-header">
+          <h3> المجموعة {{ group_name }}</h3>
+      </div>
+
+      <div class="table-group-wrapper card-3d" id="group-table-{{ forloop.counter }}"> 
+        <div class="table-responsive"> 
+          <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>الفريق</th>
+                    <th>ل</th>
+                    <th>ف</th>
+                    <th>ت</th>
+                    <th>خ</th>
+                    <th>الأهداف</th>
+                    <th>فارق</th>
+                    <th>النقاط</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in standings %}
+                <tr>
+                    <td>
+                        {% if row.team.logo %}
+                            <img src="{{ row.team.logo.url }}" width="25" height="25" alt="">
+                        {% endif %}
+                        {{ row.team.name }}
+                    </td>
+                    <td>{{ row.played }}</td>
+                    <td>{{ row.wins }}</td>
+                    <td>{{ row.draws }}</td>
+                    <td>{{ row.losses }}</td>
+                    <td>{{ row.goals_for }}-{{ row.goals_against }}</td>
+                    <td>{{ row.goal_diff }}</td>
+                    <td>{{ row.points }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8">لا توجد فرق في هذه المجموعة بعد.</td></tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <p class="text-muted small mt-3"> في حال التساوي بالنقاط وفارق الأهداف، يتم ترتيب الفرق وفق <strong>المواجهات المباشرة</strong></p>
+      </div>
+      <button type="button" class="btn btn-modern btn-save-group" data-target-id="group-table-{{ forloop.counter }}">
+              💾 حفظ صورة المجموعة
+        </button>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+/* ... (كل التنسيقات الموجودة مسبقاً) ... */
+
+.league-container {
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 12px;
+}
+.table-group-wrapper {
+    margin-bottom: 20px;
+}
+.table-responsive {
+    overflow-x: auto; 
+}
+.league-container table.table {
+    width: 100%; 
+    margin: 0;
+    border-collapse: collapse;
+    border-radius: 10px;
+    table-layout: auto !important; 
+}
+table.table th, table.table td {
+    text-align: center;
+    vertical-align: middle;
+    padding: 8px 3px; 
+    border-bottom: 1px solid rgba(204,255,0,0.1);
+    white-space: normal !important; 
+    font-size: 1.5rem;
+}
+
+/* ... (تنسيقات المربع الأصفر والأزرار العلوية) ... */
+.d-flex.justify-content-between.align-items-center.mb-3 {
+    flex-direction: column-reverse; 
+    align-items: center; 
+    gap: 30px; 
+    margin-bottom: 40px !important; 
+}
+.league-logo-container {
+    width: 250px; 
+    border: 3px solid var(--phosphor-yellow, #e4ff00);
+    border-radius: 12px;
+    padding: 15px; 
+    display: flex;
+    flex-direction: column; 
+    align-items: center;    
+    justify-content: center; 
+    background: rgba(0,0,0,0.1);
+    flex-shrink: 0;
+    margin-top: 20px; 
+}
+.league-logo-detail {
+    width: 100%;
+    max-width: 150px; 
+    height: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 15px; 
+}
+.league-logo-container h2 {
+    color: #CCFF00;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: relative;
+    margin: 0; 
+    font-size: 1.8rem; 
+    text-align: center; 
+}
+h2:after {
+    display: none !important; 
+}
+h2 {
+    color: #CCFF00;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: relative;
+}
+.league-info-and-buttons {
+    flex-grow: 1; 
+    width: 100%; 
+    display: flex; 
+    justify-content: center; 
+    padding: 0; 
+}
+.league-buttons-wrapper {
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center; 
+    gap: 15px; 
+}
+.btn-modern:after {
+    display: none !important; 
+}
+.btn-modern:hover {
+    transform: none !important; 
+    box-shadow: 0 5px 15px rgba(228, 255, 0, 0.3) !important; 
+}
+
+/* ... (تنسيقات جدول الفرق) ... */
+table.table td:first-child img {
+    width: 70px !important;  
+    height: 70px !important; 
+    object-fit: cover;    
+    border: 2px solid #e4ff00; 
+    border-radius: 4px;   
+    flex-shrink: 0;       
+}
+table.table td:first-child {
+    display: flex;             
+    align-items: center;       
+    justify-content: flex-start; 
+    gap: 8px;                  
+    white-space: nowrap !important; 
+    padding-right: 10px !important; 
+}
+
+/* ⬇️⬇️ تم إضافة هذه التنسيقات الجديدة ⬇️⬇️ */
+
+/* 1. حاوية عنوان المجموعة والزر */
+.group-header {
+    position: relative; /* لجعل الزر يتمركز بالنسبة له */
+    display: flex;
+    justify-content: center; /* لتوسيط العنوان H3 */
+    align-items: center;
+}
+
+/* 2. تنسيق عنوان المجموعة H3 */
+h3 {
+    color: var(--gray, #cebe08);
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 10px;
+    text-align: center; 
+    margin-bottom: 0; /* تم نقل المسافة إلى .group-header */
+}
+
+/* 3. تنسيق زر حفظ المجموعة (على اليسار) */
+.btn-save-group {
+    position: absolute;
+    left: 0; /* سيظهر على اليسار (لأن الصفحة RTL) */
+    top: 50%;
+    transform: translateY(-50%);
+    
+    /* تنسيقات لجعله زراً صغيراً شفافاً */
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    background: transparent;
+    border: 2px solid var(--gray, #cebe08);
+    color: var(--gray, #cebe08);
+    box-shadow: none;
+}
+/* ⬆️⬆️ نهاية الإضافات ⬆️⬆️ */
+
+
+.card-3d {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+.card-3d:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+.btn-modern {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(45deg, var(--phosphor-yellow), var(--phosphor-yellow-light));
+    color: var(--dark-black);
+}
+table {
+    width: 100%; 
+}
+.btn-warning { background-color: #f0ad4e; border-color: #f0ad4e; color: #fff;}
+.btn-danger { background-color: #d9534f; border-color: #d9534f; color: #fff;}
+.btn-primary { background-color: #0275d8; border-color: #0275d8; color: #fff;}
+.btn-success { background-color: #5cb85c; border-color: #5cb85c; color: #fff;}
+.card-3d:hover {
+    transform: none;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+@media (max-width: 600px) {
+    .d-flex.justify-content-between.align-items-center.mb-3 {
+        gap: 20px;
+    }
+    .league-logo-container {
+        width: 100%;
+        max-width: 250px;
+        margin-top: 0;
+    }
+    .league-logo-detail {
+        max-width: 100px;
+    }
+    .league-logo-container h2 {
+        font-size: 1.5rem;
+    }
+    .league-buttons-wrapper {
+        justify-content: center;
+        gap: 10px;
+    }
+    .league-info-and-buttons {
+        padding-right: 0;
+    }
+    /* تعديل زر الحفظ للشاشات الصغيرة */
+    .btn-save-group {
+        position: static; /* إلغاء التموضع المطلق */
+        transform: none;
+        margin-top: 10px;
+        width: 100%; /* جعله بعرض كامل */
+    }
+    .group-header {
+        flex-direction: column; /* جعل العنوان والزر عموديين */
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // ⚡ إزالة التأثيرات التفاعلية الزائدة (كما طلبت)
+    const cards = document.querySelectorAll('.card-3d');
+    cards.forEach(card => {
+        card.removeEventListener('mousemove', function(){});
+        card.removeEventListener('mouseleave', function(){});
+    });
+
+    // ⬇️⬇️ السكريبت الجديد لحفظ المجموعة ⬇️⬇️
+    const saveButtons = document.querySelectorAll('.btn-save-group');
+
+    saveButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation(); 
+            
+            const targetId = this.getAttribute('data-target-id');
+            const elementToSave = document.getElementById(targetId);
+            
+            if (!elementToSave) {
+                console.error('لم يتم العثور على العنصر: ' + targetId);
+                return;
+            }
+
+            const originalButtonText = this.textContent;
+            this.textContent = '...جاري التحضير';
+            
+            html2canvas(elementToSave, {
+                backgroundColor: "#131201", 
+                scale: 2, 
+                useCORS: true 
+            }).then(canvas => {
+                const leagueName = document.querySelector('.league-logo-container h2')?.textContent.trim() || 'league';
+                
+                // ⬇️⬇️ هذا هو السطر الذي تم تعديله ⬇️⬇️
+                // ابحث عن العنصر "الأخ" السابق للجدول (الذي هو .group-header)
+                const groupHeader = elementToSave.previousElementSibling; 
+                
+                let groupName = 'group'; // قيمة افتراضية
+                // تأكد أننا وجدنا الحاوية الصحيحة قبل محاولة القراءة منها
+                if (groupHeader && groupHeader.classList.contains('group-header') && groupHeader.querySelector('h3')) {
+                     groupName = groupHeader.querySelector('h3').textContent.trim();
+                }
+                // ⬆️⬆️ نهاية التعديل ⬆️⬆️
+
+                const link = document.createElement('a');
+                link.download = `standings-${leagueName}-${groupName}.png`;
+                link.href = canvas.toDataURL('image/png');
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                this.textContent = originalButtonText; // إعادة نص الزر
+
+            }).catch(err => {
+                // هذا الكود لن يعمل الآن إلا إذا فشل التحميل فعلاً
+                console.error('html2canvas error:', err);
+                this.textContent = '❌ فشل';
+                setTimeout(() => { this.textContent = originalButtonText; }, 3000);
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

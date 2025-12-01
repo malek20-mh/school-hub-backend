@@ -1,0 +1,363 @@
+{% extends "base.html" %}
+{% block title %}جدول مباريات {{ league.name }} المختار{% endblock %}
+
+{% block content %}
+<div class="container text-center mt-4">
+    <button id="download-schedule-btn" class="btn btn-modern mb-4">📸 حفظ الجدول كصورة</button>
+</div>
+
+<div class="schedule-container" id="schedule-to-capture">
+    
+    <div class="schedule-header">
+        <div class="league-title-wrapper">
+            {% if league.logo %}
+                <img src="{{ league.logo.url }}" alt="{{ league.name }} Logo" class="header-league-logo">
+            {% endif %}
+            <h2 class="header-title">جدول مبارايات الجولة الاولى <p class="league-name-sub">{{ league.name }}</p></h2>
+        </div>
+    </div>
+
+    <div class="matches-grid">
+        
+        {% for match in matches %}
+        <div class="match-grid-item">
+            <div class="match-banner-strip">
+                
+                <div class="team-side team-right">
+                    <h3 class="team-name">{{ match.team_a.name }}</h3>
+                    <div class="team-logo-display">
+                        {% if match.team_a.logo %}
+                            <img src="{{ match.team_a.logo.url }}" alt="{{ match.team_a.name }}">
+                        {% else %}
+                            <span>?</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="match-center-info">
+                    <div class="date-badge">{{ match.date|date:"Y/m/d" }}</div>
+                    
+                    <div class="score-display">
+                        {% if match.goals_team_a is not None %}
+                            <span class="score-num">{{ match.goals_team_a }}</span>
+                            <span class="score-sep">:</span>
+                            <span class="score-num">{{ match.goals_team_b }}</span>
+                        {% else %}
+                            <span class="vs-badge">VS</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="time-location">
+                        <span> {{ match.date|time:"H:i" }}</span>
+                        <span> {{ match.stadium }}</span>
+                    </div>
+                </div>
+
+                <div class="team-side team-left">
+                    <div class="team-logo-display">
+                        {% if match.team_b.logo %}
+                            <img src="{{ match.team_b.logo.url }}" alt="{{ match.team_b.name }}">
+                        {% else %}
+                            <span>?</span>
+                        {% endif %}
+                    </div>
+                    <h3 class="team-name">{{ match.team_b.name }}</h3>
+                </div>
+
+            </div>
+        </div>
+        {% empty %}
+            <p class="text-center text-white">لم يتم تحديد أي مباريات.</p>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* حاوية الجدول كاملة */
+    .schedule-container {
+        /* تم إزالة max-width ليأخذ العرض الكامل للمحتوى (main) */
+        width: 120%; 
+        margin: 0 auto;
+        background-color: #0a0a0a; 
+        padding: 40px;
+        border: 2px solid var(--gray, #cebe08);
+        border-radius: 10px;
+        background-image: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+    }
+
+    .schedule-header {
+        text-align: center;
+        margin-bottom: 30px;
+        border-bottom: 2px solid var(--phosphor-yellow, #e4ff00);
+        padding-bottom: 15px;
+    }
+    .league-title-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 10px;
+    }
+    .header-league-logo {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        border-radius: 8px;
+        border: 1px solid rgba(228, 255, 0, 0.4);
+        padding: 5px;
+        background-color: rgba(255,255,255,0.05);
+    }
+    .header-title { /* تنسيق العنوان الرئيسي */
+        text-align: right;
+        color: var(--phosphor-yellow, #e4ff00);
+        font-weight: 800;
+        text-shadow: 0 0 10px rgba(228, 255, 0, 0.3);
+        margin: 0;
+    }
+    .league-name-sub { /* تنسيق اسم الدوري الفرعي */
+        color: #fff;
+        font-size: 1.2rem;
+        margin-top: 5px;
+        font-weight: 400;
+        text-align: center;
+        margin: 0;
+    }
+
+    /* 🌟 التنسيق الجديد للشبكة (العمودين) */
+    .matches-grid {
+    /* تحديد العرض الأقصى للشبكة وتوسيطها */
+    max-width: 1160px; /* تم تقليل العرض الأقصى ليناسب الهامش داخل الحاوية */
+    margin: 0 auto; 
+
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 20px;
+    padding: 10px;
+}
+    .match-grid-item {
+        display: block; 
+    }
+    
+    /* تصميم شريط المباراة (البانر) */
+    .match-banner-strip {
+        margin-bottom: 0; 
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0.05) 100%);
+        border: 1px solid rgba(228, 255, 0, 0.3);
+        padding: 10px 20px;
+        border-radius: 50px; 
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    }
+    
+    .match-banner-strip::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 20%;
+        right: 20%;
+        height: 2px;
+        background: var(--phosphor-yellow, #e4ff00);
+        opacity: 0.6;
+    }
+
+    /* جوانب الفرق */
+    .team-side {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
+    }
+    .team-right { justify-content: flex-end; text-align: right; }
+    .team-left { justify-content: flex-start; text-align: left; }
+
+    .team-name {
+        color: #fff;
+        font-weight: 700;
+        font-size: 1.4rem;
+        margin: 0;
+        text-shadow: 1px 1px 2px #000;
+    }
+
+    .team-logo-display { 
+        width: 80px; 
+        height: 80px; 
+        background: none;
+        border: none; 
+        border-radius: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        z-index: 2;
+    }
+    .team-logo-display img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 5px;
+    }
+    .team-logo-display span {
+        color: var(--phosphor-yellow, #e4ff00);
+        font-weight: bold;
+        font-size: 2rem;
+    }
+
+    /* منطقة المنتصف */
+    .match-center-info {
+        flex: 0 0 220px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0 10px;
+    }
+
+    .date-badge {
+        font-size: 0.9rem;
+        color: #aaa;
+        background: rgba(0,0,0,0.5);
+        padding: 4px 10px;
+        border-radius: 4px;
+        margin-bottom: 5px;
+    }
+
+    .score-display {
+        font-family: 'Arial', sans-serif;
+        font-weight: 900;
+        font-size: 2.2rem;
+        color: #fff;
+        background: #222;
+        padding: 8px 25px;
+        border-radius: 10px;
+        border: 1px solid #444;
+        min-width: 120px;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        box-shadow: inset 0 0 10px #000;
+    }
+    .score-num { color: #fff; }
+    .score-sep { color: var(--phosphor-yellow, #e4ff00); animation: blink 2s infinite; }
+    
+    .vs-badge {
+        color: var(--phosphor-yellow, #e4ff00);
+        font-size: 1.8rem;
+        font-style: italic;
+    }
+
+    .time-location {
+        font-size: 0.85rem;
+        color: var(--gray, #cebe08);
+        display: flex;
+        gap: 15px;
+    }
+
+    .schedule-footer {
+        text-align: center;
+        margin-top: 30px;
+        color: #555;
+        font-size: 0.8rem;
+    }
+
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.3; }
+    }
+
+    /* 💡 استعلامات الوسائط (للتجاوب) */
+
+    @media (max-width: 1200px) { /* التحول إلى عمود واحد عندما يضيق عرض الشاشة */
+        .matches-grid {
+             grid-template-columns: 1fr; /* عمود واحد */
+             max-width: 600px; /* تقييد العرض لعمود واحد */
+        }
+    }
+
+    @media (max-width: 992px) { 
+        .schedule-container { 
+            padding: 20px;
+        }
+        .matches-grid {
+             max-width: 100%; /* العرض الكامل المتاح على شاشات متوسطة */
+        }
+        .match-banner-strip {
+             padding: 10px 15px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .header-title { font-size: 1.5rem; }
+        .league-name-sub { font-size: 1rem; }
+        .header-league-logo { width: 50px; height: 50px; }
+        .league-title-wrapper { flex-direction: column; gap: 5px; }
+
+        .match-banner-strip { 
+            flex-direction: column;
+            gap: 15px;
+            border-radius: 20px;
+            padding: 15px;
+        }
+        .team-side { 
+            width: 100%;
+            justify-content: center !important;
+            text-align: center !important;
+        }
+        .team-right { flex-direction: row-reverse; } 
+        .team-name { font-size: 1.1rem; }
+        .team-logo-display { width: 60px; height: 60px; }
+        .team-logo-display span { font-size: 1.5rem; }
+
+        .match-center-info { flex: none; width: 100%; margin: 10px 0; }
+        .score-display { font-size: 1.8rem; padding: 5px 15px; min-width: 100px; }
+        .vs-badge { font-size: 1.4rem; }
+        .time-location { flex-direction: column; gap: 5px; font-size: 0.8rem; }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const downloadBtn = document.getElementById('download-schedule-btn');
+        if (!downloadBtn) return;
+
+        downloadBtn.addEventListener('click', function() {
+            const element = document.getElementById('schedule-to-capture');
+            const btn = this;
+            
+            const originalText = btn.textContent;
+            btn.textContent = '...جاري التحضير';
+            
+            html2canvas(element, {
+                // مقياس 3 يحافظ على جودة عالية
+                scale: 3, 
+                backgroundColor: "#000000",
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'matches-schedule-{{ league.name }}.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                btn.textContent = originalText;
+            }).catch(err => {
+                console.error('Failed to capture image:', err);
+                btn.textContent = '❌ فشل الحفظ';
+                setTimeout(() => { btn.textContent = originalText; }, 3000);
+            });
+        });
+    });
+</script>
+{% endblock %}

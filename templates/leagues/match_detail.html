@@ -1,0 +1,346 @@
+{% extends "base.html" %}
+{% block title %}تفاصيل المباراة{% endblock %}
+
+{% block content %}
+<div class="container match-card-container card-3d" id="match-card-to-save" style="margin-top: 30px; max-width: 900px;">
+
+    <div class="match-league-header">
+        {% if match.league.logo %}
+            <img src="{{ match.league.logo.url }}" alt="{{ match.league.name }} logo" class="match-league-logo">
+        {% endif %}
+        <h3>{{ match.league.name }}</h3>
+        
+        <p class="match-round-text" contenteditable="true" data-placeholder="ادخل دور المباراة">دورة شهداء الفتح الموعود_دور المجموعات</p>
+    </div>
+    
+    <div class="match-teams-card">
+        <div class="team-info">
+            {% if match.team_a.logo %}
+                <img src="{{ match.team_a.logo.url }}" alt="{{ match.team_a.name }}" class="team-logo-large">
+            {% else %}
+                <div class="team-logo-large placeholder-logo">?</div>
+            {% endif %}
+            <h2>{{ match.team_a.name }}</h2>
+        </div>
+        <div class="vs-text">
+            <span>VS</span>
+        </div>
+        <div class="team-info">
+            {% if match.team_b.logo %}
+                <img src="{{ match.team_b.logo.url }}" alt="{{ match.team_b.name }}" class="team-logo-large">
+            {% else %}
+                <div class="team-logo-large placeholder-logo">?</div>
+            {% endif %}
+            <h2>{{ match.team_b.name }}</h2>
+        </div>
+    </div>
+    
+    <div class="match-details-footer">
+        <div class="detail-item">
+            <span>🏟️ الملعب</span>
+            <p>{{ match.stadium }}</p>
+        </div>
+        <div class="detail-item">
+            <span>📅 التاريخ</span>
+            <p>{{ match.date|date:"l, d F Y" }}</p>
+        </div>
+        <div class="detail-item">
+            <span>⏰ الوقت</span>
+            <p>{{ match.date|time:"P" }}</p>
+        </div>
+    </div>
+    
+    <div class="additional-match-info">
+        <div class="detail-item">
+            <span>👨‍⚖️ حكم المباراة</span>
+            <p contenteditable="true" data-placeholder="ادخل اسم الحكم">يحدد لاحقاً</p>
+        </div>
+        <div class="detail-item">
+            <span>📺 القناة الناقلة</span>
+            <p contenteditable="true" data-placeholder="ادخل اسم القناة">صقور بعدان على فيسبوك</p>
+        </div>
+    </div>
+    
+</div>
+
+<div style="text-align: center; margin-top: 30px; display: flex; justify-content: center; gap: 15px;">
+    <a href="{% url 'league_matches' match.league.id %}" class="btn btn-modern btn-outline-modern">رجوع إلى المباريات</a>
+    <button type="button" id="download-match-card-btn" class="btn btn-modern">💾 حفظ كصورة</button>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 1. تنسيق رأس الدوري (داخل البطاقة) */
+    .match-league-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        border-bottom: 1px solid var(--gray, #cebe08);
+        padding-bottom: 15px;
+        margin-bottom: 20px;
+    }
+    .match-league-logo {
+        width: 70px; /* ⬅️ تم تكبيره في الكود السابق */
+        height: 70px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--gray, #cebe08);
+    }
+    .match-league-header h3 {
+        color: var(--white, #fff);
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 500;
+        flex-shrink: 0; /* ⬅️ يمنعه من الانكماش */
+    }
+
+    /* ⬇️⬇️ هذا هو التنسيق الجديد ⬇️⬇️ */
+    .match-round-text {
+        color: var(--gray, #cebe08);
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin: 0;
+        padding: 5px 10px;
+        border-radius: 5px;
+        min-width: 150px;
+        text-align: left; /* ⬅️ محاذاة النص لليسار */
+        margin-left: auto; /* ⬅️ هذا السطر يدفعه إلى أقصى اليسار */
+        
+        /* تنسيقات قابلية التحرير */
+        cursor: text;
+        border-bottom: 1px dashed var(--phosphor-yellow, #e4ff00);
+        transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .match-round-text:hover {
+        background: rgba(228, 255, 0, 0.05);
+    }
+    .match-round-text:focus {
+        outline: none;
+        border-bottom: 2px solid var(--phosphor-yellow, #e4ff00);
+        background: rgba(228, 255, 0, 0.1);
+    }
+    .match-round-text:empty:not(:focus):before {
+        content: attr(data-placeholder);
+        color: rgba(255,255,255,0.5); 
+    }
+    /* ⬆️⬆️ نهاية التنسيق الجديد ⬆️⬆️ */
+
+    /* 2. تنسيق بطاقة الفريقين */
+    .match-teams-card {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        padding: 30px 0;
+    }
+    .team-info {
+        flex: 1;
+        text-align: center;
+    }
+    .team-logo-large {
+        width: 150px;
+        height: 150px;
+        object-fit: contain;
+        margin-bottom: 15px;
+        transition: transform 0.3s ease;
+    }
+    .team-logo-large:hover {
+        transform: scale(1.05);
+    }
+    .placeholder-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.05);
+        border: 3px dashed var(--gray, #cebe08);
+        border-radius: 50%;
+        color: var(--gray, #cebe08);
+        font-size: 5rem;
+        font-weight: 900;
+    }
+    .team-info h2 {
+        color: var(--phosphor-yellow, #e4ff00);
+        font-size: 2.2rem;
+        margin: 0;
+        font-weight: 700;
+    }
+    
+    /* 3. تنسيق VS */
+    .vs-text {
+        flex: 0.5;
+        text-align: center;
+    }
+    .vs-text span {
+        font-size: 4rem;
+        font-weight: 900;
+        color: var(--phosphor-yellow, #e4ff00);
+        text-shadow: 0 0 15px rgba(228, 255, 0, 0.5);
+    }
+    
+    /* 4. تنسيق المربعات السفلية */
+    .match-details-footer, .additional-match-info {
+        display: flex;
+        justify-content: space-around;
+        margin-top: 25px;
+        background: var(--phosphor-yellow, #e4ff00); 
+        border: 2px solid var(--phosphor-yellow, #e4ff00);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 5px 15px rgba(228, 255, 0, 0.3);
+        flex-wrap: wrap; 
+        gap: 15px; 
+    }
+    .additional-match-info {
+        margin-top: 15px;
+        background:var(--phosphor-yellow, #e4ff00);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow:  0 5px 15px rgba(228, 255, 0, 0.3);
+    }
+    
+    .detail-item {
+        text-align: center;
+        flex: 1; 
+        min-width: 180px;
+    }
+    .detail-item span {
+        font-size: 1.1rem;
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600; 
+    }
+    .match-details-footer .detail-item span { 
+         color: black;
+    }
+    .additional-match-info .detail-item span {
+        color: black;
+    }
+
+    .detail-item p {
+        font-size: 1.3rem;
+        color: black;
+        margin: 0;
+        font-weight: 500;
+        padding: 5px 10px;
+        border-radius: 5px;
+        background: rgba(0,0,0,0.1);
+        min-height: 1.3em;
+        white-space: normal; 
+        word-wrap: break-word; 
+    }
+    .additional-match-info .detail-item p {
+        color: black;
+        background: rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* تنسيق خاص بالنص القابل للتحرير (للقناة والحكم) */
+    .additional-match-info [contenteditable="true"] {
+        cursor: text;
+        border-bottom: 1px dashed var(--phosphor-yellow, #e4ff00);
+        transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .additional-match-info [contenteditable="true"]:hover {
+        border-color: var(--phosphor-yellow-light, #f5ff8a);
+        background: rgba(228, 255, 0, 0.05);
+    }
+    .additional-match-info [contenteditable="true"]:focus {
+        outline: none;
+        border-bottom: 2px solid var(--phosphor-yellow, #e4ff00);
+        background: rgba(228, 255, 0, 0.1);
+    }
+    .additional-match-info [contenteditable="true"]:empty:not(:focus):before {
+        content: attr(data-placeholder);
+        color: rgba(255,255,255,0.5); 
+    }
+
+    /* 5. تنسيق زر الرجوع */
+    .btn-outline-modern {
+        background: transparent;
+        border: 2px solid var(--gray, #cebe08);
+        color: var(--gray, #cebe08);
+        box-shadow: none; 
+    }
+    .btn-outline-modern:hover {
+        background: var(--gray, #cebe08);
+        color: var(--dark-black, #111);
+        box-shadow: 0 5px 15px rgba(206, 190, 8, 0.3);
+    }
+
+    /* تصميم متجاوب إضافي */
+    @media (max-width: 600px) {
+        .match-teams-card { flex-direction: column; gap: 20px; }
+        .vs-text { order: 1; padding: 20px 0; }
+        .team-info:first-child { order: 0; }
+        .team-info:last-child { order: 2; }
+        .match-details-footer, .additional-match-info { flex-direction: column; gap: 10px; }
+        .detail-item { min-width: auto; width: 100%; }
+        /* تعديل الهيدر في الموبايل */
+        .match-league-header {
+            flex-direction: column; /* ⬅️ جعل العناصر عمودية */
+            gap: 10px;
+        }
+        .match-round-text {
+            margin-left: 0; /* ⬅️ إلغاء الدفع لليسار */
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM جاهز، السكريبت بدأ.');
+
+    const downloadBtn = document.getElementById('download-match-card-btn');
+    // تأكد أن هذا هو العنصر الوحيد الذي نريد تصويره
+    const cardElement = document.getElementById('match-card-to-save'); 
+
+    if (!downloadBtn || !cardElement) {
+        console.error('لم يتم العثور على الزر أو البطاقة المراد تصويرها!');
+        return;
+    }
+    
+    console.log('تم العثور على الزر والبطاقة.');
+
+    downloadBtn.addEventListener('click', function() {
+        console.log('تم الضغط على الزر.');
+        
+        // حفظ النص الأصلي للزر لتغييره مؤقتاً
+        const originalButtonText = downloadBtn.textContent;
+        downloadBtn.textContent = '...جاري التحضير';
+
+        html2canvas(cardElement, {
+            backgroundColor: "#131201", 
+            scale: 2,
+            useCORS: true 
+        }).then(canvas => {
+            console.log('تم إنشاء الصورة بنجاح.');
+            
+            const link = document.createElement('a');
+            link.download = 'match-card-{{ match.team_a.name }}-vs-{{ match.team_b.name }}.png';
+            link.href = canvas.toDataURL('image/png');
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            console.log('تم بدء التحميل.');
+            // إعادة نص الزر الأصلي
+            downloadBtn.textContent = originalButtonText;
+            
+        }).catch(err => {
+            console.error('حدث خطأ أثناء محاولة html2canvas:', err);
+            downloadBtn.textContent = '❌ فشل التحميل';
+            // إعادة نص الزر الأصلي بعد فترة قصيرة
+            setTimeout(() => {
+                downloadBtn.textContent = originalButtonText;
+            }, 3000);
+        });
+    });
+});
+</script>
+{% endblock %}

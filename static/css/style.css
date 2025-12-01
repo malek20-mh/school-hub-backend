@@ -1,0 +1,95 @@
+/* 🌐 إعدادات عامة */
+:root {
+    --sky-blue: #3b85f3;
+    --phosphor-yellow: #CCFF00;
+    --dark-blue: #15437f;
+    --light-gray: #f5f7fa;
+    --accent-shadow: rgba(135, 206, 235, 0.3);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--light-gray) 0%, #E0F7FF 100%);
+    margin: 0;
+    padding: 0;
+}
+
+/* 📦 الحاويات */
+.container {
+    margin-top: 30px;
+}
+
+/* 🏷️ العناوين */
+h2 {
+    color: var(--dark-blue);
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    position: relative;
+}
+h2:after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--sky-blue), var(--phosphor-yellow));
+    border-radius: 2px;
+}
+
+/* 🖼️ البطاقات */
+.card-3d {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-3d:hover {
+    box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+}
+
+/* 🔘 الأزرار */
+.btn-modern {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+.btn-modern:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+.btn-modern:hover:after {
+    left: 100%;
+}
+
+/* 📝 النماذج */
+.form-control {
+    border-radius: 8px;
+    border: 1px solid #E2E8F0;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+.form-control:focus {
+    border-color: var(--sky-blue);
+    box-shadow: 0 0 0 3px var(--accent-shadow);
+}
+
+/* 📱 تجاوب */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+    }
+    .card-3d {
+        padding: 15px;
+    }
+}
