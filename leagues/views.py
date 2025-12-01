@@ -251,18 +251,28 @@ def match_delete(request, pk):
         return redirect("league_matches", pk=league_id)
     return render(request, "leagues/match_delete_confirm.html", {"match": match})
 
+from django.core.paginator import Paginator # <-- لا تنسَ هذا الاستيراد في أعلى الملف
+
 @login_required
 def league_scorers_update(request, pk):
     league = get_object_or_404(League, pk=pk)
     if request.user != league.owner:
         return HttpResponseForbidden("🚫 لا تملك صلاحية تعديل هدافي هذا الدوري")
 
-    matches = league.matches.all()
+    # 1. جلب المباريات وترتيبها (الأحدث أولاً)
+    all_matches = league.matches.all().order_by('-date')
+
+    # 2. تقسيم المباريات (5 مباريات فقط في الصفحة الواحدة)
+    paginator = Paginator(all_matches, 5) 
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     formsets = []
 
     if request.method == "POST":
         all_valid = True
-        for match in matches:
+        # نتعامل فقط مع المباريات المعروضة في الصفحة الحالية
+        for match in page_obj:
             formset = GoalScorerFormSet(
                 request.POST, request.FILES,
                 instance=match,
@@ -275,10 +285,12 @@ def league_scorers_update(request, pk):
         if all_valid:
             for match, formset in formsets:
                 formset.save()
+            # البقاء في نفس الصفحة بعد الحفظ أو الذهاب للقائمة
             return redirect("league_scorers", pk=league.id)
 
     else:
-        for match in matches:
+        # عرض الفورم للمباريات الـ 5 الحالية فقط
+        for match in page_obj:
             formset = GoalScorerFormSet(
                 instance=match,
                 prefix=str(match.id)
@@ -288,6 +300,7 @@ def league_scorers_update(request, pk):
     return render(request, "leagues/league_scorers_update.html", {
         "league": league,
         "formsets": formsets,
+        "page_obj": page_obj, # <-- نمرر كائن التقسيم للقالب لإظهار أزرار التالي/السابق
     })
 
 @login_required

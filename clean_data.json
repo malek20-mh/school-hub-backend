@@ -1,0 +1,1610 @@
+[
+{
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$fQcqkB7KY5wQScmIKZPxwc$iaVT9kpnsjQp6WDx8dpc5Z3puPTrzQuMZXhNpfGhTQU=",
+        "last_login": "2025-11-08T00:40:03.793Z",
+        "is_superuser": true,
+        "username": "malek",
+        "first_name": "",
+        "last_name": "",
+        "email": "zz775165375@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-09-13T22:01:33.108Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$5VCtPVcEAcUqSP1SL70IiR$noMDO5KQyEoIJfZXdfeReFYkGtTpdWwe+x3Gh1DwXMI=",
+        "last_login": null,
+        "is_superuser": true,
+        "username": "malik",
+        "first_name": "",
+        "last_name": "",
+        "email": "asdf@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-09-14T20:41:58.687Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$4dPq6a7Kio4Vce4cE69tP1$ny3SXIaEN8lROE98A8iQvL0ln5wCgKHV+b3lYXqEElU=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "abobakr",
+        "first_name": "",
+        "last_name": "",
+        "email": "ant771122@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-09-14T22:04:07.157Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$6YVqpNqMthBUBz2Yd02VpZ$4OpHyPUVDD5MzVb5H3LGW9H6FM8UBrfPq9PW3rQJ+zM=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "abobakr2022",
+        "first_name": "",
+        "last_name": "",
+        "email": "ant771122@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-09-14T22:10:46.776Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$Stq6L4WrYQOVlfr7C9xR7p$lQaZJQoiyyjYC/TI2xiwd4IVo1KVvqveNvAsw3o3JUw=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "abo2022",
+        "first_name": "",
+        "last_name": "",
+        "email": "ant771122@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-09-14T22:19:32.047Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$3cWDH8kteKGSLfW1P11eve$YbmvPt6uns5olalJ3rlK2Zxetu8VN80nI1vaI7u+4qs=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "abo20",
+        "first_name": "",
+        "last_name": "",
+        "email": "ant771122@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-09-14T22:37:28.151Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 7,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$1yVvZ3SSdCcAhtjXAioQfe$yW9xqAKSlVpCElugTXoJCaBCgjPcx4XP9w1RxhOz2yU=",
+        "last_login": "2025-09-14T22:51:36.777Z",
+        "is_superuser": false,
+        "username": "aa32",
+        "first_name": "",
+        "last_name": "",
+        "email": "ant771122@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-09-14T22:51:35.517Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 8,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$kvNDxYl4drgX0B31MVXlOh$NI3G+rSeRkJf5kxMF2ClJVjATWbVkZFhhLjh3WfZgbU=",
+        "last_login": "2025-09-14T22:59:52.468Z",
+        "is_superuser": false,
+        "username": "aa22",
+        "first_name": "",
+        "last_name": "",
+        "email": "ant771122@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-09-14T22:59:51.133Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 9,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$C8G8OYUXTN6KV1Tv0rP9PM$5vq4MRuVnp2dLQVKjdMQa4amxUW9p6sF7MSRliYbUMw=",
+        "last_login": "2025-09-14T23:01:20.937Z",
+        "is_superuser": false,
+        "username": "abo780",
+        "first_name": "",
+        "last_name": "",
+        "email": "ant771122@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-09-14T23:00:49.507Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 10,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$x1kKYuqJDIjZiQR6V3uGM7$A6O7Y8TnEuwERG5/zSX/bZgiXSoYi13yCQFzh0+9QGM=",
+        "last_login": "2025-09-14T23:40:56.567Z",
+        "is_superuser": false,
+        "username": "ali",
+        "first_name": "",
+        "last_name": "",
+        "email": "zz775165375@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-09-14T23:36:55.038Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 11,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$0E4u0wY2S8b4n2PyQq96Jw$BxvxkbBsX8Gr9KtWPq8GkwTm2QsPW46piuOQ0cHMH4w=",
+        "last_login": "2025-09-24T20:34:04.731Z",
+        "is_superuser": false,
+        "username": "raad",
+        "first_name": "",
+        "last_name": "",
+        "email": "ant771122@gmail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-09-15T21:20:21.169Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "pk": 12,
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$9egVdJfpdsCsOxJ2hYgdFk$wOqxCy/miXe4queWJHBZZz/SXaTEb1cdEQSdevRL0/I=",
+        "last_login": "2025-11-25T18:00:27.645Z",
+        "is_superuser": true,
+        "username": "malikh",
+        "first_name": "",
+        "last_name": "",
+        "email": "abc@gmail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-11-11T19:44:03.572Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 1,
+    "fields": {
+        "user": 3,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-09-14T22:04:08.822Z"
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 3,
+    "fields": {
+        "user": 4,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-09-14T22:10:48.105Z"
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 5,
+    "fields": {
+        "user": 5,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-09-14T22:19:33.399Z"
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 7,
+    "fields": {
+        "user": 2,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-09-14T22:35:41.963Z"
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 8,
+    "fields": {
+        "user": 1,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-09-14T22:35:41.972Z"
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 9,
+    "fields": {
+        "user": 6,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-09-14T22:37:29.622Z"
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 11,
+    "fields": {
+        "user": 7,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-09-14T22:51:36.763Z"
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 12,
+    "fields": {
+        "user": 8,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-09-14T22:59:52.452Z"
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 13,
+    "fields": {
+        "user": 9,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-09-14T23:00:50.727Z"
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 14,
+    "fields": {
+        "user": 10,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-09-14T23:36:56.537Z"
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 15,
+    "fields": {
+        "user": 11,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-09-15T21:20:22.384Z"
+    }
+},
+{
+    "model": "users.profile",
+    "pk": 16,
+    "fields": {
+        "user": 12,
+        "role": "user",
+        "phone": null,
+        "created_at": "2025-11-11T19:44:04.179Z"
+    }
+},
+{
+    "model": "leagues.league",
+    "pk": 1,
+    "fields": {
+        "name": "كاس بعدان 18",
+        "owner": 12,
+        "location": "badan",
+        "created_at": "2025-09-15T20:35:09.984Z",
+        "logo": "league_logos/badan.png"
+    }
+},
+{
+    "model": "leagues.group",
+    "pk": 1,
+    "fields": {
+        "league": 1,
+        "name": "الاولى"
+    }
+},
+{
+    "model": "leagues.group",
+    "pk": 2,
+    "fields": {
+        "league": 1,
+        "name": "الثانية"
+    }
+},
+{
+    "model": "leagues.group",
+    "pk": 17,
+    "fields": {
+        "league": 1,
+        "name": "الثالثة"
+    }
+},
+{
+    "model": "leagues.group",
+    "pk": 18,
+    "fields": {
+        "league": 1,
+        "name": "الرابعة"
+    }
+},
+{
+    "model": "leagues.group",
+    "pk": 19,
+    "fields": {
+        "league": 1,
+        "name": "الخامسة"
+    }
+},
+{
+    "model": "leagues.group",
+    "pk": 20,
+    "fields": {
+        "league": 1,
+        "name": "السادسة"
+    }
+},
+{
+    "model": "leagues.group",
+    "pk": 21,
+    "fields": {
+        "league": 1,
+        "name": "السابعة"
+    }
+},
+{
+    "model": "leagues.group",
+    "pk": 22,
+    "fields": {
+        "league": 1,
+        "name": "الثامنة"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 39,
+    "fields": {
+        "league": 1,
+        "group": 2,
+        "name": "الشرف فرع العدين",
+        "logo": "team_logos/alsharaf.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 40,
+    "fields": {
+        "league": 1,
+        "group": 2,
+        "name": "النجم الرياضي",
+        "logo": "team_logos/alnagm.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 41,
+    "fields": {
+        "league": 1,
+        "group": 1,
+        "name": "صقور بعدان",
+        "logo": "team_logos/sqoor_badan.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 42,
+    "fields": {
+        "league": 1,
+        "group": 1,
+        "name": "النصر المعبر",
+        "logo": "team_logos/alnaser.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 43,
+    "fields": {
+        "league": 1,
+        "group": 1,
+        "name": "شباب جبلة",
+        "logo": "team_logos/shabab_jeblah.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 45,
+    "fields": {
+        "league": 1,
+        "group": 1,
+        "name": "الفيحاء ذي الدم",
+        "logo": "team_logos/alfiha.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 62,
+    "fields": {
+        "league": 1,
+        "group": 17,
+        "name": "صقور الشعر",
+        "logo": "team_logos/sqoor_shaeer.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 63,
+    "fields": {
+        "league": 1,
+        "group": 2,
+        "name": "اتحاد المخادر",
+        "logo": "team_logos/ithad_almkhder.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 64,
+    "fields": {
+        "league": 1,
+        "group": 2,
+        "name": "اتحاد بني مدسم",
+        "logo": "team_logos/ithad_madsem.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 65,
+    "fields": {
+        "league": 1,
+        "group": 17,
+        "name": "صمود دلال",
+        "logo": "team_logos/alsmood.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 66,
+    "fields": {
+        "league": 1,
+        "group": 17,
+        "name": "سام نؤادة",
+        "logo": "team_logos/sam_nodh.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 67,
+    "fields": {
+        "league": 1,
+        "group": 17,
+        "name": "اتحاد الحرث",
+        "logo": ""
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 68,
+    "fields": {
+        "league": 1,
+        "group": 18,
+        "name": "يحصب يريم",
+        "logo": "team_logos/yahsob.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 69,
+    "fields": {
+        "league": 1,
+        "group": 18,
+        "name": "عز الرياضي",
+        "logo": ""
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 70,
+    "fields": {
+        "league": 1,
+        "group": 18,
+        "name": "شباب الحزم",
+        "logo": "team_logos/shabab_alhazm.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 71,
+    "fields": {
+        "league": 1,
+        "group": 18,
+        "name": "تضامن ذي اقحم",
+        "logo": "team_logos/altadhamon.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 72,
+    "fields": {
+        "league": 1,
+        "group": 19,
+        "name": "هلال عردن",
+        "logo": "team_logos/hial_ordon.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 73,
+    "fields": {
+        "league": 1,
+        "group": 19,
+        "name": "صقور دوغان",
+        "logo": "team_logos/sqoordoghan.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 74,
+    "fields": {
+        "league": 1,
+        "group": 19,
+        "name": "الصديق يريم",
+        "logo": "team_logos/alsadek.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 75,
+    "fields": {
+        "league": 1,
+        "group": 19,
+        "name": "شباب الصقور",
+        "logo": "team_logos/shabab_alsqoor.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 76,
+    "fields": {
+        "league": 1,
+        "group": 20,
+        "name": "فرسان دلال",
+        "logo": "team_logos/alfrsan.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 77,
+    "fields": {
+        "league": 1,
+        "group": 20,
+        "name": "اكاديمية سام",
+        "logo": "team_logos/sam.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 78,
+    "fields": {
+        "league": 1,
+        "group": 20,
+        "name": "شباب النجد",
+        "logo": "team_logos/shaba_ahgnegd.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 79,
+    "fields": {
+        "league": 1,
+        "group": 20,
+        "name": "الامل حدبة",
+        "logo": "team_logos/alamel.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 80,
+    "fields": {
+        "league": 1,
+        "group": 21,
+        "name": "اتحاد رهوان",
+        "logo": "team_logos/ithad_rhwan.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 81,
+    "fields": {
+        "league": 1,
+        "group": 21,
+        "name": "الفجر يريم",
+        "logo": "team_logos/alfajer.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 82,
+    "fields": {
+        "league": 1,
+        "group": 21,
+        "name": "اتحاد دلال",
+        "logo": "team_logos/ithad_dlall.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 83,
+    "fields": {
+        "league": 1,
+        "group": 21,
+        "name": "الفتح بلاد الشعيبي",
+        "logo": "team_logos/alfateh.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 84,
+    "fields": {
+        "league": 1,
+        "group": 22,
+        "name": "22 مايو",
+        "logo": "team_logos/22may.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 85,
+    "fields": {
+        "league": 1,
+        "group": 22,
+        "name": "اتحاد ميتم",
+        "logo": "team_logos/maitm.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 86,
+    "fields": {
+        "league": 1,
+        "group": 22,
+        "name": "السلام حيسان",
+        "logo": "team_logos/alslam.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 87,
+    "fields": {
+        "league": 1,
+        "group": 22,
+        "name": "صقور بني عواض",
+        "logo": "team_logos/sqoor_bnioadh.png"
+    }
+},
+{
+    "model": "leagues.team",
+    "pk": 88,
+    "fields": {
+        "league": 1,
+        "group": 22,
+        "name": "اتحاد الشرف",
+        "logo": "team_logos/alsharaf_DbAGqRW.png"
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 21,
+    "fields": {
+        "league": 1,
+        "team_a": 40,
+        "team_b": 63,
+        "date": "2025-11-29T10:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": 2,
+        "goals_team_b": 2,
+        "yellow_cards_team_a": 1,
+        "yellow_cards_team_b": 1,
+        "red_cards_team_a": 0,
+        "red_cards_team_b": 0
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 22,
+    "fields": {
+        "league": 1,
+        "team_a": 41,
+        "team_b": 42,
+        "date": "2025-11-28T12:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": 3,
+        "goals_team_b": 0,
+        "yellow_cards_team_a": 1,
+        "yellow_cards_team_b": 1,
+        "red_cards_team_a": 0,
+        "red_cards_team_b": 0
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 23,
+    "fields": {
+        "league": 1,
+        "team_a": 62,
+        "team_b": 65,
+        "date": "2025-11-29T12:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": 4,
+        "goals_team_b": 2,
+        "yellow_cards_team_a": 3,
+        "yellow_cards_team_b": 1,
+        "red_cards_team_a": 0,
+        "red_cards_team_b": 0
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 24,
+    "fields": {
+        "league": 1,
+        "team_a": 68,
+        "team_b": 70,
+        "date": "2025-11-30T10:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": 0,
+        "goals_team_b": 2,
+        "yellow_cards_team_a": 1,
+        "yellow_cards_team_b": 0,
+        "red_cards_team_a": 0,
+        "red_cards_team_b": 0
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 25,
+    "fields": {
+        "league": 1,
+        "team_a": 72,
+        "team_b": 73,
+        "date": "2025-11-30T12:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": 2,
+        "goals_team_b": 5,
+        "yellow_cards_team_a": 4,
+        "yellow_cards_team_b": 1,
+        "red_cards_team_a": 1,
+        "red_cards_team_b": 0
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 26,
+    "fields": {
+        "league": 1,
+        "team_a": 76,
+        "team_b": 78,
+        "date": "2025-12-01T10:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": 3,
+        "goals_team_b": 1,
+        "yellow_cards_team_a": 0,
+        "yellow_cards_team_b": 1,
+        "red_cards_team_a": 0,
+        "red_cards_team_b": 0
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 27,
+    "fields": {
+        "league": 1,
+        "team_a": 80,
+        "team_b": 81,
+        "date": "2025-12-01T12:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": 3,
+        "goals_team_b": 3,
+        "yellow_cards_team_a": 2,
+        "yellow_cards_team_b": 1,
+        "red_cards_team_a": 0,
+        "red_cards_team_b": 0
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 28,
+    "fields": {
+        "league": 1,
+        "team_a": 84,
+        "team_b": 88,
+        "date": "2025-12-02T10:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": null,
+        "goals_team_b": null,
+        "yellow_cards_team_a": null,
+        "yellow_cards_team_b": null,
+        "red_cards_team_a": null,
+        "red_cards_team_b": null
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 29,
+    "fields": {
+        "league": 1,
+        "team_a": 43,
+        "team_b": 45,
+        "date": "2025-12-02T12:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": null,
+        "goals_team_b": null,
+        "yellow_cards_team_a": null,
+        "yellow_cards_team_b": null,
+        "red_cards_team_a": null,
+        "red_cards_team_b": null
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 30,
+    "fields": {
+        "league": 1,
+        "team_a": 39,
+        "team_b": 64,
+        "date": "2025-12-03T10:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": null,
+        "goals_team_b": null,
+        "yellow_cards_team_a": null,
+        "yellow_cards_team_b": null,
+        "red_cards_team_a": null,
+        "red_cards_team_b": null
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 31,
+    "fields": {
+        "league": 1,
+        "team_a": 66,
+        "team_b": 67,
+        "date": "2025-12-03T12:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": null,
+        "goals_team_b": null,
+        "yellow_cards_team_a": null,
+        "yellow_cards_team_b": null,
+        "red_cards_team_a": null,
+        "red_cards_team_b": null
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 32,
+    "fields": {
+        "league": 1,
+        "team_a": 69,
+        "team_b": 71,
+        "date": "2025-12-04T10:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": null,
+        "goals_team_b": null,
+        "yellow_cards_team_a": null,
+        "yellow_cards_team_b": null,
+        "red_cards_team_a": null,
+        "red_cards_team_b": null
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 33,
+    "fields": {
+        "league": 1,
+        "team_a": 74,
+        "team_b": 75,
+        "date": "2025-12-04T12:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": null,
+        "goals_team_b": null,
+        "yellow_cards_team_a": null,
+        "yellow_cards_team_b": null,
+        "red_cards_team_a": null,
+        "red_cards_team_b": null
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 34,
+    "fields": {
+        "league": 1,
+        "team_a": 77,
+        "team_b": 79,
+        "date": "2025-12-05T10:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": null,
+        "goals_team_b": null,
+        "yellow_cards_team_a": null,
+        "yellow_cards_team_b": null,
+        "red_cards_team_a": null,
+        "red_cards_team_b": null
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 35,
+    "fields": {
+        "league": 1,
+        "team_a": 82,
+        "team_b": 83,
+        "date": "2025-12-05T12:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": null,
+        "goals_team_b": null,
+        "yellow_cards_team_a": null,
+        "yellow_cards_team_b": null,
+        "red_cards_team_a": null,
+        "red_cards_team_b": null
+    }
+},
+{
+    "model": "leagues.match",
+    "pk": 36,
+    "fields": {
+        "league": 1,
+        "team_a": 86,
+        "team_b": 85,
+        "date": "2025-12-06T10:30:00Z",
+        "stadium": "ملعب الفتح بالمحشاش",
+        "goals_team_a": null,
+        "goals_team_b": null,
+        "yellow_cards_team_a": null,
+        "yellow_cards_team_b": null,
+        "red_cards_team_a": null,
+        "red_cards_team_b": null
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 6,
+    "fields": {
+        "match": 22,
+        "team": 41,
+        "player_name": "سليمان النظاري",
+        "goals": 2
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 7,
+    "fields": {
+        "match": 22,
+        "team": 41,
+        "player_name": "جميل نعمان",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 8,
+    "fields": {
+        "match": 21,
+        "team": 40,
+        "player_name": "عمار ردمان",
+        "goals": 2
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 9,
+    "fields": {
+        "match": 21,
+        "team": 63,
+        "player_name": "مالك بركات",
+        "goals": 2
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 10,
+    "fields": {
+        "match": 23,
+        "team": 62,
+        "player_name": "محمد عبدربه",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 11,
+    "fields": {
+        "match": 23,
+        "team": 62,
+        "player_name": "يونس العميسي",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 12,
+    "fields": {
+        "match": 23,
+        "team": 62,
+        "player_name": "عكاشة الصناعي",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 13,
+    "fields": {
+        "match": 23,
+        "team": 62,
+        "player_name": "علاء المظلوم",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 14,
+    "fields": {
+        "match": 23,
+        "team": 65,
+        "player_name": "صالح شرف الدين",
+        "goals": 2
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 15,
+    "fields": {
+        "match": 24,
+        "team": 70,
+        "player_name": "عاصم العواضي",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 16,
+    "fields": {
+        "match": 24,
+        "team": 70,
+        "player_name": "محيى الدين محروس",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 17,
+    "fields": {
+        "match": 25,
+        "team": 73,
+        "player_name": "حمزة محروس",
+        "goals": 3
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 18,
+    "fields": {
+        "match": 25,
+        "team": 73,
+        "player_name": "محمد شمس الدين",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 19,
+    "fields": {
+        "match": 25,
+        "team": 73,
+        "player_name": "يوسف الجراش",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 20,
+    "fields": {
+        "match": 25,
+        "team": 72,
+        "player_name": "مراد مرشد",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 21,
+    "fields": {
+        "match": 25,
+        "team": 72,
+        "player_name": "خالد المساوى",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 22,
+    "fields": {
+        "match": 27,
+        "team": 80,
+        "player_name": "رياض عشه",
+        "goals": 2
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 23,
+    "fields": {
+        "match": 27,
+        "team": 80,
+        "player_name": "هاني علوان",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 24,
+    "fields": {
+        "match": 27,
+        "team": 81,
+        "player_name": "حسام الضراب",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 25,
+    "fields": {
+        "match": 27,
+        "team": 81,
+        "player_name": "محمد الابرهي",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 26,
+    "fields": {
+        "match": 27,
+        "team": 81,
+        "player_name": "خالد توفيق",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 27,
+    "fields": {
+        "match": 26,
+        "team": 76,
+        "player_name": "علاء الصهباني",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 28,
+    "fields": {
+        "match": 26,
+        "team": 76,
+        "player_name": "عبدالسلام الصنعاني",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 29,
+    "fields": {
+        "match": 26,
+        "team": 76,
+        "player_name": "صالح شحرة",
+        "goals": 1
+    }
+},
+{
+    "model": "leagues.goalscorer",
+    "pk": 30,
+    "fields": {
+        "match": 26,
+        "team": 78,
+        "player_name": "عمر العبدلي",
+        "goals": 1
+    }
+},
+{
+    "model": "stadiums.stadium",
+    "pk": 1,
+    "fields": {
+        "name": "sban",
+        "location": "alradhmah",
+        "owner": 6
+    }
+},
+{
+    "model": "stadiums.stadium",
+    "pk": 2,
+    "fields": {
+        "name": "ola",
+        "location": "ibb",
+        "owner": 1
+    }
+},
+{
+    "model": "stadiums.field",
+    "pk": 1,
+    "fields": {
+        "stadium": 1,
+        "name": "alraad",
+        "opening_time": "05:30:00",
+        "closing_time": "23:59:00",
+        "price_per_slot": "6000.00",
+        "area": null
+    }
+},
+{
+    "model": "stadiums.field",
+    "pk": 2,
+    "fields": {
+        "stadium": 2,
+        "name": "al_ola",
+        "opening_time": "05:30:00",
+        "closing_time": "23:30:00",
+        "price_per_slot": "5000.00",
+        "area": 69
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 1,
+    "fields": {
+        "field": 1,
+        "timeslot": "{\"bounds\": \"[]\", \"lower\": \"2025-09-22T05:30:00+00:00\", \"upper\": \"2025-09-22T07:00:00+00:00\"}",
+        "user": 1,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 2,
+    "fields": {
+        "field": 1,
+        "timeslot": "{\"bounds\": \"[]\", \"lower\": \"2025-09-22T08:30:00+00:00\", \"upper\": \"2025-09-22T10:00:00+00:00\"}",
+        "user": 1,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 3,
+    "fields": {
+        "field": 1,
+        "timeslot": "{\"bounds\": \"[]\", \"lower\": \"2025-09-22T11:30:00+00:00\", \"upper\": \"2025-09-22T13:00:00+00:00\"}",
+        "user": 11,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 4,
+    "fields": {
+        "field": 1,
+        "timeslot": "{\"bounds\": \"[]\", \"lower\": \"2025-09-22T14:30:00+00:00\", \"upper\": \"2025-09-22T16:00:00+00:00\"}",
+        "user": 11,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 5,
+    "fields": {
+        "field": 2,
+        "timeslot": "{\"bounds\": \"[]\", \"lower\": \"2025-09-22T05:30:00+00:00\", \"upper\": \"2025-09-22T07:00:00+00:00\"}",
+        "user": 1,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 6,
+    "fields": {
+        "field": 2,
+        "timeslot": "{\"bounds\": \"[]\", \"lower\": \"2025-09-22T08:30:00+00:00\", \"upper\": \"2025-09-22T10:00:00+00:00\"}",
+        "user": 1,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 7,
+    "fields": {
+        "field": 1,
+        "timeslot": "{\"bounds\": \"[]\", \"lower\": \"2025-09-22T17:30:00+00:00\", \"upper\": \"2025-09-22T19:00:00+00:00\"}",
+        "user": 1,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 8,
+    "fields": {
+        "field": 2,
+        "timeslot": "{\"bounds\": \"[]\", \"lower\": \"2025-09-23T05:30:00+00:00\", \"upper\": \"2025-09-23T07:00:00+00:00\"}",
+        "user": 1,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "confirmed"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 9,
+    "fields": {
+        "field": 1,
+        "timeslot": "{\"bounds\": \"[]\", \"lower\": \"2025-09-22T20:30:00+00:00\", \"upper\": \"2025-09-22T22:00:00+00:00\"}",
+        "user": 1,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 15,
+    "fields": {
+        "field": 1,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-23T05:30:00+00:00\", \"upper\": \"2025-09-23T07:00:00+00:00\"}",
+        "user": 1,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 16,
+    "fields": {
+        "field": 2,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-23T08:30:00+00:00\", \"upper\": \"2025-09-23T10:00:00+00:00\"}",
+        "user": 11,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "confirmed"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 17,
+    "fields": {
+        "field": 2,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-23T10:00:00+00:00\", \"upper\": \"2025-09-23T11:30:00+00:00\"}",
+        "user": 11,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "confirmed"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 18,
+    "fields": {
+        "field": 1,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-23T07:00:00+00:00\", \"upper\": \"2025-09-23T08:30:00+00:00\"}",
+        "user": 1,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 19,
+    "fields": {
+        "field": 1,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-23T08:30:00+00:00\", \"upper\": \"2025-09-23T10:00:00+00:00\"}",
+        "user": 1,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 20,
+    "fields": {
+        "field": 1,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-23T10:00:00+00:00\", \"upper\": \"2025-09-23T11:30:00+00:00\"}",
+        "user": 1,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 21,
+    "fields": {
+        "field": 2,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-23T11:30:00+00:00\", \"upper\": \"2025-09-23T13:00:00+00:00\"}",
+        "user": 11,
+        "full_name": "0",
+        "age": null,
+        "address": null,
+        "phone": null,
+        "status": "canceled"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 22,
+    "fields": {
+        "field": 2,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-23T13:00:00+00:00\", \"upper\": \"2025-09-23T14:30:00+00:00\"}",
+        "user": 11,
+        "full_name": "malek",
+        "age": 20,
+        "address": null,
+        "phone": "775165375",
+        "status": "confirmed"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 23,
+    "fields": {
+        "field": 2,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-23T14:30:00+00:00\", \"upper\": \"2025-09-23T16:00:00+00:00\"}",
+        "user": 11,
+        "full_name": "abo",
+        "age": 9,
+        "address": null,
+        "phone": "234543",
+        "status": "canceled"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 26,
+    "fields": {
+        "field": 2,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-23T16:00:00+00:00\", \"upper\": \"2025-09-23T17:30:00+00:00\"}",
+        "user": 11,
+        "full_name": "talal",
+        "age": 23,
+        "address": "gaw",
+        "phone": "75553443546",
+        "status": "confirmed"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 28,
+    "fields": {
+        "field": 1,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-23T11:30:00+00:00\", \"upper\": \"2025-09-23T13:00:00+00:00\"}",
+        "user": 1,
+        "full_name": "talal",
+        "age": 77,
+        "address": "kjk",
+        "phone": "7886",
+        "status": "pending"
+    }
+},
+{
+    "model": "stadiums.booking",
+    "pk": 31,
+    "fields": {
+        "field": 2,
+        "timeslot": "{\"bounds\": \"[)\", \"lower\": \"2025-09-24T05:30:00+00:00\", \"upper\": \"2025-09-24T07:00:00+00:00\"}",
+        "user": 11,
+        "full_name": "ابوبكر الشلالي",
+        "age": 22,
+        "address": "اب",
+        "phone": "773344465",
+        "status": "confirmed"
+    }
+},
+{
+    "model": "stadiums.stadiumimage",
+    "pk": 1,
+    "fields": {
+        "stadium": 1,
+        "image": "stadiums/yhya.jpg",
+        "caption": null
+    }
+}
+]
