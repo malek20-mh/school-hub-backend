@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-import dj_database_url  # <-- مكتبة ضرورية للربط مع Neon/Render
+import dj_database_url
 
 load_dotenv()
 
@@ -10,10 +10,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # التعامل مع المفتاح السري ومتغير التصحيح بشكل آمن
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
 
-# تحويل النص إلى بوليان لأن متغيرات البيئة تكون نصوص دائماً
+# تحويل النص إلى بوليان
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
-# السماح لجميع النطاقات مؤقتاً أو تحديد نطاق ريندر
+# السماح لجميع النطاقات مؤقتاً
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
 
 # مهم جداً عند الرفع على Render (HTTPS)
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # <-- يجب أن يكون هنا مباشرة بعد Security
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # مهم للملفات الثابتة
     "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -70,22 +70,38 @@ TEMPLATES = [
 WSGI_APPLICATION = "center.wsgi.application"
 ASGI_APPLICATION = "center.asgi.application"
 
-# --- إعدادات قاعدة البيانات ---
-# محلياً: يستخدم القيم الافتراضية المكتوبة
-# في السيرفر: يستخدم رابط DATABASE_URL الذي سنضيفه في Render
-DATABASES = {
-    "default": dj_database_url.config(
-        default=f"postgres://{os.getenv('DB_USER', 'center_user')}:{os.getenv('DB_PASSWORD', '775165375')}@{os.getenv('DB_HOST', 'localhost')}:{os.getenv('DB_PORT', '5432')}/{os.getenv('DB_NAME', 'center')}",
-        conn_max_age=600
-    )
-}
+# --- إعدادات قاعدة البيانات (الجزء المصحح) ---
+# يحاول جلب رابط قاعدة البيانات من Render أولاً
+database_url = os.getenv("DATABASE_URL")
 
-# --- إعدادات الملفات الثابتة (CSS/JS) ---
+if database_url:
+    # إعدادات السيرفر (Render + Neon)
+    DATABASES = {
+        'default': dj_database_url.parse(
+            database_url,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    # إعدادات الجهاز المحلي (Localhost)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME", "center"),
+            "USER": os.getenv("DB_USER", "center_user"),
+            "PASSWORD": os.getenv("DB_PASSWORD", "775165375"),
+            "HOST": os.getenv("DB_HOST", "localhost"),
+            "PORT": os.getenv("DB_PORT", "5432"),
+        }
+    }
+
+# --- إعدادات الملفات الثابتة ---
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-# تفعيل ضغط الملفات وتسريعها باستخدام WhiteNoise
+# ضغط الملفات باستخدام WhiteNoise
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
@@ -94,8 +110,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 LOGOUT_REDIRECT_URL = "stadium_list"
 
 # --- إعدادات Redis / Channels ---
-# ملاحظة: ريندر المجاني لا يوفر Redis
-# إذا لم تضع رابط Redis خارجي، هذه الميزات لن تعمل في العرض المجاني
+# إذا لم يوجد رابط REDIS_URL سيستخدم الرابط المحلي الافتراضي
 REDIS_URL = os.getenv("REDIS_URL", "redis://127.0.0.1:6379/0")
 
 CHANNEL_LAYERS = {
