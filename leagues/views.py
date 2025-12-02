@@ -166,22 +166,17 @@ def league_update(request, pk):
     if request.method == "POST":
         form = LeagueForm(request.POST, instance=league)
         group_formset = GroupFormSet(request.POST, instance=league)
-        team_formset = TeamFormSet(
-            request.POST,
-            request.FILES,
-            instance=league,
-            form_kwargs={"league": league},
-        )
+        
+        # ❌ حذفنا TeamFormSet من هنا لتوفير الذاكرة
 
-        if form.is_valid() and group_formset.is_valid() and team_formset.is_valid():
+        if form.is_valid() and group_formset.is_valid():
             form.save()
             group_formset.save()
-            team_formset.save()
             return redirect("league_detail", pk=league.pk)
     else:
         form = LeagueForm(instance=league)
         group_formset = GroupFormSet(instance=league)
-        team_formset = TeamFormSet(instance=league, form_kwargs={"league": league})
+        # ❌ حذفنا TeamFormSet من العرض أيضاً
 
     return render(
         request,
@@ -189,7 +184,7 @@ def league_update(request, pk):
         {
             "form": form,
             "group_formset": group_formset,
-            "team_formset": team_formset,
+            "league": league,  # نمرر كائن الدوري لنستطيع وضع رابط لصفحة الفرق
         },
     )
 # ---------------------------
