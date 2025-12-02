@@ -307,7 +307,12 @@ table {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    
+    // ⚡ إزالة التأثيرات التفاعلية الزائدة (كما طلبت)
+    const cards = document.querySelectorAll('.card-3d');
+    cards.forEach(card => {
+        card.removeEventListener('mousemove', function(){});
+        card.removeEventListener('mouseleave', function(){});
+    });
 
     // ⬇️⬇️ السكريبت الجديد لحفظ المجموعة ⬇️⬇️
     const saveButtons = document.querySelectorAll('.btn-save-group');
