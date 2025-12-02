@@ -166,9 +166,6 @@ def league_update(request, pk):
     if request.method == "POST":
         form = LeagueForm(request.POST, instance=league)
         group_formset = GroupFormSet(request.POST, instance=league)
-        
-        # ❌ حذفنا TeamFormSet من هنا لتوفير الذاكرة
-
         if form.is_valid() and group_formset.is_valid():
             form.save()
             group_formset.save()
@@ -176,15 +173,13 @@ def league_update(request, pk):
     else:
         form = LeagueForm(instance=league)
         group_formset = GroupFormSet(instance=league)
-        # ❌ حذفنا TeamFormSet من العرض أيضاً
-
     return render(
         request,
         "leagues/league_update.html",
         {
             "form": form,
             "group_formset": group_formset,
-            "league": league,  # نمرر كائن الدوري لنستطيع وضع رابط لصفحة الفرق
+            "league": league,
         },
     )
 # ---------------------------
