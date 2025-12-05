@@ -2,23 +2,23 @@
 {% block title %}قائمة الملاعب{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2 class="glow-text">قائمة الملاعب</h2>
+<div class="container mt-4" style="max-width: 1200px;">
+    
+    <h2 class="glow-text text-center mb-4">قائمة الملاعب</h2>
 
-    <!-- 🔎 فلترة الأوقات -->
-    <form method="get" class="modern-form card-3d">
+    <form method="get" class="modern-form card-3d p-4 mb-4">
         <div class="row g-2">
             <div class="col-md-3">
-                <label for="search_date">التاريخ</label>
-                <input type="date" id="search_date" name="search_date" value="{{ search_date }}">
+                <label>التاريخ</label>
+                <input type="date" name="search_date" value="{{ search_date }}">
             </div>
             <div class="col-md-3">
-                <label for="search_time">الوقت</label>
-                <input type="time" id="search_time" name="search_time" value="{{ search_time }}">
+                <label>الوقت</label>
+                <input type="time" name="search_time" value="{{ search_time }}">
             </div>
             <div class="col-md-3">
-                <label for="duration">المدة (دقيقة)</label>
-                <input type="number" id="duration" name="duration" value="{{ duration|default:90 }}" placeholder="الدقائق">
+                <label>المدة (دقيقة)</label>
+                <input type="number" name="duration" value="{{ duration|default:90 }}" placeholder="الدقائق">
             </div>
             <div class="col-md-3 d-flex align-items-end">
                 <button type="submit" class="btn-modern w-100">🔍 تصفية</button>
@@ -26,9 +26,9 @@
         </div>
     </form>
 
-    <div class="card-3d mt-4">
+    <div class="card-3d">
         <div class="table-responsive">
-            <table class="modern-table">
+            <table class="cyan-table">
                 <thead>
                     <tr>
                         <th>الاسم</th>
@@ -38,23 +38,23 @@
                 </thead>
                 <tbody>
                     {% for stadium in stadiums %}
-                    <tr class="table-row">
+                    <tr>
                         <td><a href="{% url 'stadium_detail' stadium.id %}" class="stadium-link">{{ stadium.name }}</a></td>
                         <td>{{ stadium.location }}</td>
                         <td>
-                            <a href="{% url 'stadium_detail' stadium.id %}" class="btn-action view-btn">👁️ عرض</a>
+                            <a href="{% url 'stadium_detail' stadium.id %}" class="btn btn-sm btn-primary">👁️ عرض</a>
                             {% if user == stadium.owner %}
-                                <div class="dropdown d-inline">
-                                    <button class="btn-action manage-btn dropdown-toggle" type="button" id="dropdownMenu{{ stadium.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                <div class="dropdown d-inline position-relative">
+                                    <button type="button" class="btn btn-sm btn-outline-yellow dropdown-toggle">
                                         ⚙️ إدارة
                                     </button>
-                                    <ul class="dropdown-menu modern-dropdown" aria-labelledby="dropdownMenu{{ stadium.id }}">
+                                    <ul class="dropdown-menu custom-dropdown-menu">
                                         {% for f in stadium.fields.all %}
-                                            <li class="dropdown-field-item">
-                                                <h6 class="dropdown-header">{{ f.name }}</h6>
-                                                <a class="dropdown-item" href="{% url 'edit_field' f.id %}">✏️ تعديل بيانات</a>
-                                                <a class="dropdown-item" href="{% url 'add_maintenance' f.id %}">🛠️ صيانة</a>
-                                                {% if not forloop.last %}<hr class="dropdown-divider">{% endif %}
+                                            <li style="padding: 5px 10px;">
+                                                <h6 style="color: var(--bright-cyan); margin:0;">{{ f.name }}</h6>
+                                                <a class="custom-dropdown-item" href="{% url 'edit_field' f.id %}">✏️ تعديل</a>
+                                                <a class="custom-dropdown-item" href="{% url 'add_maintenance' f.id %}">🛠️ صيانة</a>
+                                                {% if not forloop.last %}<hr style="margin: 5px 0; border-color: #555;">{% endif %}
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -63,17 +63,16 @@
                         </td>
                     </tr>
                     {% empty %}
-                    <tr class="table-row"><td colspan="3" class="text-center">لا يوجد ملاعب</td></tr>
+                    <tr><td colspan="3" class="text-center">لا يوجد ملاعب حالياً.</td></tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- زر طلب إضافة ملعب -->
-    <div class="card-3d mt-4">
-        <h5 class="glow-text">طلب اضافة ملعب جديد؟</h5>
-        <div class="d-flex gap-3 mt-3">
+    <div class="card-3d mt-4 text-center p-4">
+        <h5 class="glow-text mb-3">طلب اضافة ملعب جديد؟</h5>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
             <a class="btn-modern whatsapp-btn" href="https://wa.me/967775165375" target="_blank">
                 <span>📲 تواصل مع المدير 1</span>
             </a>
@@ -82,17 +81,18 @@
             </a>
         </div>
     </div>
+
     {% if available_fields %}
-        <div class="card-3d mt-4">
-            <h3 class="glow-text">الملاعب المتاحة في الوقت المحدد:</h3>
-            <ul class="modern-list mt-3">
+        <div class="card-3d mt-4 p-4">
+            <h3 class="glow-text mb-3">الملاعب المتاحة في الوقت المحدد:</h3>
+            <ul class="modern-list">
                 {% for f in available_fields %}
-                    <li>
+                    <li style="border-bottom: 1px solid #333; padding: 10px;">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <strong>{{ f.stadium.name }}</strong> - {{ f.name }}
+                                <strong style="color: var(--bright-cyan);">{{ f.stadium.name }}</strong> - {{ f.name }}
                             </div>
-                            <a href="{% url 'field_schedule' f.id %}" class="btn-action schedule-btn">📅 عرض الجدول</a>
+                            <a href="{% url 'field_schedule' f.id %}" class="btn btn-sm btn-success">📅 عرض الجدول</a>
                         </div>
                     </li>
                 {% endfor %}
@@ -100,329 +100,4 @@
         </div>
     {% endif %}
 </div>
-
-<style>
-    /* أنماط التصميم الجديد - سماوي بدلاً من أصفر */
-    :root {
-        --dark-cyan: #CCFF00;
-        --medium-cyan: #080a00;
-        --light-cyan: #010101;
-        --bright-cyan: #CCFF00;
-        --bright-cyan-light: #CCFF00;
-        --white: #ffffff;
-        --gray: #b0b0b0;
-        --light-gray: #e0e0e0;
-    }
-    
-    .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 15px;
-    }
-    
-    h2, h3, h5 {
-        color: var(--bright-cyan);
-        margin-bottom: 1.5rem;
-        text-align: center;
-    }
-    
-    .glow-text {
-        text-shadow: 0 0 10px rgba(19, 16, 1, 0.5);
-    }
-    
-    /* تحسينات للجدول */
-    .modern-table {
-        width: 100%;
-        border-collapse: collapse;
-        color: var(--white);
-    }
-    
-    .modern-table th {
-        background: linear-gradient(45deg, var(--light-cyan), var(--medium-cyan));
-        padding: 1rem;
-        text-align: right;
-        border-bottom: 2px solid var(--bright-cyan);
-        font-weight: 600;
-    }
-    
-    .table-row {
-        transition: all 0.3s ease;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .table-row:hover {
-        background: rgba(38, 29, 1, 0.2);
-        transform: translateX(5px);
-    }
-    
-    .modern-table td {
-        padding: 1rem;
-        vertical-align: middle;
-    }
-    
-    .stadium-link {
-        color: var(--bright-cyan);
-        text-decoration: none;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        position: relative;
-    }
-    
-    .stadium-link:after {
-        content: '';
-        position: absolute;
-        bottom: -2px;
-        right: 0;
-        width: 0;
-        height: 2px;
-        background: var(--bright-cyan);
-        transition: width 0.3s ease;
-    }
-    
-    .stadium-link:hover {
-        color: var(--bright-cyan-light);
-    }
-    
-    .stadium-link:hover:after {
-        width: 100%;
-    }
-    
-    /* تصميم الأزرار */
-    .btn-action {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        border-radius: 6px;
-        text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        margin-left: 0.5rem;
-        border: none;
-        cursor: pointer;
-    }
-    
-    .view-btn {
-        background: rgba(38, 29, 1, 0.2);
-        color: var(--bright-cyan);
-        border: 1px solid var(--bright-cyan);
-    }
-    
-    .view-btn:hover {
-        background: #523c02;
-        color: var(--dark-cyan);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px  rgba(38, 29, 1, 0.2);
-
-    }
-    
-    .manage-btn {
-        background: rgba(38, 29, 1, 0.2);
-        color: #e6ee07;
-        border: 1px solid  #bcee07;
-    }
-    
-    .manage-btn:hover {
-        background: #523c02;
-        color: var(--dark-cyan);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
-    }
-    
-    .schedule-btn {
-        background: rgba(40, 167, 69, 0.2);
-        color: #28a745;
-        border: 1px solid #28a745;
-        padding: 0.3rem 0.8rem;
-        font-size: 0.9rem;
-    }
-    
-    .schedule-btn:hover {
-        background: #28a745;
-        color:  #1e1d00;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
-    }
-    
-    /* تحسينات للقائمة المنسدلة */
-    .modern-dropdown {
-        background: var(--medium-cyan);
-        border: 1px solid var(--bright-cyan);
-        border-radius: 8px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        padding: 0.5rem;
-    }
-    
-    .dropdown-field-item {
-        padding: 0.5rem;
-        border-radius: 4px;
-        transition: background 0.3s ease;
-    }
-    
-    .dropdown-field-item:hover {
-        background: rgba(31, 26, 1, 0.1);
-    }
-    
-    .dropdown-header {
-        color: var(--bright-cyan);
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-    
-    .dropdown-item {
-        color: var(--white);
-        padding: 0.5rem 1rem;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-    }
-    
-    .dropdown-item:hover {
-        background: rgba(38, 29, 1, 0.2);
-        color: var(--bright-cyan);
-    }
-    
-    .dropdown-divider {
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        margin: 0.5rem 0;
-    }
-    
-    /* تصميم نموذج الفلترة */
-    .modern-form label {
-        color: var(--bright-cyan);
-        font-weight: 500;
-        margin-bottom: 0.5rem;
-        display: block;
-    }
-    
-    /* تصميم أزرار الواتساب */
-    .whatsapp-btn {
-        background: linear-gradient(45deg, #131400, #000000);
-        color:  #bcee07;
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-    
-    .whatsapp-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 20px rgba(11, 11, 0, 0.4);
-        color:  #bcee07;
-    }
-    
-    /* تحسينات التنسيق */
-    .mt-4 {
-        margin-top: 1.5rem;
-    }
-    
-    .mt-3 {
-        margin-top: 1rem;
-    }
-    
-    .d-flex {
-        display: flex;
-    }
-    
-    .justify-content-between {
-        justify-content: space-between;
-    }
-    
-    .align-items-center {
-        align-items: center;
-    }
-    
-    .gap-3 {
-        gap: 1rem;
-    }
-    
-    .w-100 {
-        width: 100%;
-    }
-    
-    .text-center {
-        text-align: center;
-    }
-    
-    .d-inline {
-        display: inline;
-    }
-    
-    /* تصميم متجاوب */
-    @media (max-width: 768px) {
-        .modern-table {
-            display: block;
-            overflow-x: auto;
-        }
-        
-        .d-flex.gap-3 {
-            flex-direction: column;
-        }
-        
-        .btn-action {
-            display: block;
-            margin: 0.5rem 0;
-            text-align: center;
-        }
-        
-        .table-row td {
-            display: block;
-            text-align: center;
-        }
-        
-        .table-row td:before {
-            content: attr(data-label);
-            font-weight: bold;
-            display: block;
-            margin-bottom: 0.5rem;
-            color: var(--bright-cyan);
-        }
-    }
-</style>
-
-<script>
-    // إضافة تأثيرات تفاعلية إضافية
-    document.addEventListener('DOMContentLoaded', function() {
-        // تأثيرات للصفوف في الجدول
-        const tableRows = document.querySelectorAll('.table-row');
-        tableRows.forEach(row => {
-            row.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateX(5px)';
-            });
-            
-            row.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateX(0)';
-            });
-        });
-        
-        // تأثيرات للروابط
-        const stadiumLinks = document.querySelectorAll('.stadium-link');
-        stadiumLinks.forEach(link => {
-            link.addEventListener('mouseenter', function() {
-                this.style.textShadow = '0 0 8px rgba(0, 198, 255, 0.7)';
-                });
-            
-            link.addEventListener('mouseleave', function() {
-                this.style.textShadow = 'none';
-            });
-        });
-        
-        // تأثيرات للقوائم المنسدلة
-        const dropdowns = document.querySelectorAll('.dropdown-toggle');
-        dropdowns.forEach(dropdown => {
-            dropdown.addEventListener('click', function() {
-                const menu = this.nextElementSibling;
-                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
-            });
-        });
-        
-        // إغلاق القوائم المنسدلة عند النقر خارجها
-        document.addEventListener('click', function(e) {
-            if (!e.target.matches('.dropdown-toggle')) {
-                const dropdowns = document.querySelectorAll('.dropdown-menu');
-                dropdowns.forEach(menu => {
-                    menu.style.display = 'none';
-                });
-            }
-        });
-    });
-</script>
 {% endblock %}

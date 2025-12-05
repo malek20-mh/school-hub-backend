@@ -2,37 +2,43 @@
 {% block title %}إضافة الفرق{% endblock %}
 
 {% block content %}
-<div class="container card-3d">
+<div class="container card-3d" style="margin-top: 30px; max-width: 900px;">
+    
     <h2>➕ إضافة الفرق للدوري: {{ league.name }}</h2>
-    <form method="post" enctype="multipart/form-data">
+    
+    <form method="post" enctype="multipart/form-data" class="modern-form">
         {% csrf_token %}
         {{ formset.management_form }}
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>اسم الفريق</th>
-                    <th>الشعار</th>
-                    <th>المجموعة</th>
-                    <th>حذف؟</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for form in formset %}
-                {{ form.id }}
-                <tr>
-                    <td>{{ form.name }}</td>
-                    <td>{{ form.logo }}</td>
-                    <td>{{ form.group }}</td>
-                    <td>{{ form.DELETE }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        <button type="submit" class="btn btn-success btn-modern">حفظ الفرق</button>
+        
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>اسم الفريق</th>
+                        <th>الشعار</th>
+                        <th>المجموعة</th>
+                        <th class="text-center-cell">حذف؟</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in formset %}
+                    {{ form.id }}
+                    <tr>
+                        <!-- الحقول داخل الجدول سيتم تنسيقها عبر CSS تلقائياً -->
+                        <td>{{ form.name }}</td>
+                        <td>{{ form.logo }}</td>
+                        <td>{{ form.group }}</td>
+                        <td class="text-center-cell">{{ form.DELETE }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-buttons mt-4">
+            <button type="submit" class="btn btn-modern">💾 حفظ الفرق</button>
+            <a href="{% url 'league_update' league.id %}" class="btn btn-modern btn-outline-modern">رجوع</a>
+        </div>
     </form>
 </div>
-{% endblock %}
-
-{% block extra_css %}
-<style>.card-3d{padding:20px;background:#fff;border-radius:12px;}</style>
 {% endblock %}

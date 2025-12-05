@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}حذف مباراة{% endblock %}
+
+{% block content %}
+<div class="container card-3d" style="margin-top: 30px; max-width: 600px;">
+    <h2>🗑️ حذف المباراة</h2>
+    <p class="confirmation-text">
+        هل أنت متأكد من حذف المباراة بين 
+        <strong>{{ match.team_a.name }}</strong> و <strong>{{ match.team_b.name }}</strong> 
+        في الدوري <strong>{{ match.league.name }}</strong>؟
+    </p>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-buttons">
+            <button type="submit" class="btn btn-danger btn-modern">نعم، حذف</button>
+            <a href="{% url 'league_matches' match.league.id %}" class="btn btn-modern btn-outline-modern">إلغاء</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

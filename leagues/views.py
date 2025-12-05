@@ -239,7 +239,7 @@ def match_delete(request, pk):
         league_id = match.league.id
         match.delete()
         return redirect("league_matches", pk=league_id)
-    return render(request, "leagues/match_delete_confirm.html", {"match": match})
+    return render(request, "leagues/match_delete.html", {"match": match})
 
 from django.core.paginator import Paginator # <-- لا تنسَ هذا الاستيراد في أعلى الملف
 

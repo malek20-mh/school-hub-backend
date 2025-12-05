@@ -2,304 +2,34 @@
 {% block title %}إضافة فترة صيانة{% endblock %}
 
 {% block content %}
-<style>
-    :root {
-        --dark-black: #1a1a1a;
-        --phosphor-yellow: #e6ff04;
-        --dark-gray: #2d2d2d;
-        --light-gray: #444;
-        --accent-glow: 0 0 10px rgba(230, 255, 4, 0.7);
-        --maintenance-red: #3e8ce6;
-        --maintenance-glow: 0 0 10px rgba(26, 195, 210, 0.5);
-    }
+<div class="container animated-container" style="max-width:500px; margin:auto; margin-top:40px;">
     
-    body {
-        background: linear-gradient(135deg, var(--dark-black) 0%, #2a2a2a 100%);
-        color: #f0f0f0;
-        min-height: 100vh;
-    }
-    
-    .container {
-        animation: slideUp 0.6s ease-out;
-    }
-    
-    @keyframes slideUp {
-        from { 
-            opacity: 0; 
-            transform: translateY(30px); 
-        }
-        to { 
-            opacity: 1; 
-            transform: translateY(0); 
-        }
-    }
-    
-    h2 {
-        color: var(--maintenance-red);
-        text-shadow: var(--maintenance-glow);
-        font-weight: bold;
-        position: relative;
-        padding-bottom: 15px;
-        text-align: center;
-    }
-    
-    h2:after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 25%;
-        width: 50%;
-        height: 3px;
-        background: linear-gradient(90deg, transparent, var(--maintenance-red), transparent);
-        border-radius: 50%;
-    }
-    
-    h2:before {
-        content: '⚙️';
-        display: block;
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-        filter: drop-shadow(0 0 8px rgba(255, 71, 87, 0.7));
-        animation: rotate 4s linear infinite;
-    }
-    
-    @keyframes rotate {
-        0% { transform: rotate(0deg); }
-        100% { transform: rotate(360deg); }
-    }
-    
-    form {
-        background: var(--dark-gray);
-        border-radius: 15px;
-        padding: 30px;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-        border-top: 3px solid var(--maintenance-red);
-        transition: all 0.3s ease;
-        margin-top: 20px;
-    }
-    
-    form:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 
-                    var(--maintenance-glow),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    }
-    
-    .form-control {
-        background: var(--light-gray);
-        border: 1px solid #555;
-        border-radius: 8px;
-        color: #f0f0f0;
-        transition: all 0.3s;
-        padding: 12px 15px;
-        margin-bottom: 1rem;
-    }
-    
-    .form-control:focus {
-        background: #3a3a3a;
-        border-color: var(--maintenance-red);
-        box-shadow: 0 0 0 0.2rem rgba(255, 71, 87, 0.25);
-        color: #fff;
-    }
-    
-    label {
-        color: #ddd;
-        font-weight: 600;
-        margin-bottom: 8px;
-        display: block;
-    }
-    
-    .btn {
-        border-radius: 8px;
-        font-weight: 600;
-        transition: all 0.3s;
-        padding: 12px 20px;
-        position: relative;
-        overflow: hidden;
-        border: none;
-        font-size: 1.1rem;
-    }
-    
-    .btn:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-        transition: left 0.5s;
-    }
-    
-    .btn:hover:before {
-        left: 100%;
-    }
-    
-    .btn-danger {
-        background: linear-gradient(135deg, var(--maintenance-red) 0%, #ff3742 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
-    }
-    
-    .btn-danger:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(255, 71, 87, 0.5);
-        color: white;
-    }
-    
-    .btn-secondary {
-        background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-        color: white;
-        box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
-        width: 100%;
-        max-width: 200px;
-        margin-top: 10px;
-    }
-    
-    .btn-secondary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
-        color: white;
-    }
-    
-    /* تخصيص عناصر الفورم */
-    form p {
-        margin-bottom: 1.5rem;
-        position: relative;
-    }
-    
-    form p:after {
-        content: '';
-        position: absolute;
-        bottom: -10px;
-        left: 0;
-        width: 100%;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255, 71, 87, 0.3), transparent);
-    }
-    
-    /* تأثيرات ثلاثية الأبعاد للأزرار */
-    .btn-3d {
-        transform-style: preserve-3d;
-        perspective: 1000px;
-    }
-    
-    .btn-3d:active {
-        transform: translateY(4px);
-    }
-    
-    /* أيقونات مخصصة للحقول */
-    .maintenance-field {
-        position: relative;
-    }
-    
-    .maintenance-field:before {
-        content: '⏰';
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 1.2rem;
-        z-index: 5;
-        opacity: 0.7;
-    }
-    
-    /* تصميم رسائل الخطأ والتحذيرات */
-    .errorlist {
-        list-style: none;
-        padding: 0;
-        margin-top: 5px;
-    }
-    
-    .errorlist li {
-        color: var(--maintenance-red);
-        font-size: 0.9rem;
-        background: rgba(255, 71, 87, 0.1);
-        padding: 5px 10px;
-        border-radius: 5px;
-        margin-bottom: 5px;
-        border-left: 3px solid var(--maintenance-red);
-    }
-    
-    /* تصميم خاص لحقول التاريخ والوقت */
-    input[type="date"], input[type="time"] {
-        position: relative;
-    }
-    
-    input[type="date"]::-webkit-calendar-picker-indicator,
-    input[type="time"]::-webkit-calendar-picker-indicator {
-        filter: invert(0.7);
-        cursor: pointer;
-    }
-    
-    /* تأثيرات للعناصر عند التمرير */
-    .text-center {
-        padding: 10px 0;
-    }
-    
-    /* تصميم متجاوب إضافي */
-    @media (max-width: 576px) {
-        .container {
-            padding: 0 15px;
-        }
-        
-        form {
-            padding: 20px;
-        }
-        
-        h2 {
-            font-size: 1.5rem;
-        }
-    }
-</style>
+    <h2 class="maintenance-title">🛠️ إضافة فترة صيانة للملعب: {{ field.name }}</h2>
 
-<div class="container" style="max-width:500px; margin:auto; margin-top:40px;">
-    <h2 class="text-center">🛠️ إضافة فترة صيانة للملعب: {{ field.name }}</h2>
-
-    <form method="post" class="mt-4">
+    <form method="post" class="modern-form maintenance-form mt-4">
         {% csrf_token %}
         
-        <!-- تخصيص عرض الحقول مع إضافة أيقونات -->
-        {{ form.as_p }}
+        {% for field in form %}
+        <div class="icon-field-wrapper maintenance-wrapper">
+            <p>
+                {{ field.label_tag }}
+                {{ field }}
+                {% if field.errors %}
+                    <ul class="errorlist">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </p>
+        </div>
+        {% endfor %}
         
-        <button type="submit" class="btn btn-danger w-100 btn-3d">💾 حفظ الصيانة</button>
+        <button type="submit" class="btn btn-modern btn-maintenance-red w-100">💾 حفظ الصيانة</button>
     </form>
 
     <div class="mt-3 text-center">
-        <a href="{% url 'stadium_detail' field.stadium.id %}" class="btn btn-secondary btn-3d">↩️ رجوع</a>
+        <a href="{% url 'stadium_detail' field.stadium.id %}" class="btn btn-modern btn-outline-modern">↩️ رجوع</a>
     </div>
 </div>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // إضافة تأثيرات للحقول عند التحميل
-        const inputs = document.querySelectorAll('.form-control');
-        inputs.forEach(input => {
-            // إضافة أيقونة الصيانة للحقول
-            input.parentElement.classList.add('maintenance-field');
-            
-            // تأثير عند التركيز
-            input.addEventListener('focus', function() {
-                this.style.transform = 'scale(1.02)';
-                this.parentElement.style.zIndex = '10';
-            });
-            
-            input.addEventListener('blur', function() {
-                this.style.transform = 'scale(1)';
-                this.parentElement.style.zIndex = '1';
-            });
-        });
-        
-        // تأثيرات للزر الرئيسي
-        const submitBtn = document.querySelector('.btn-danger');
-        submitBtn.addEventListener('mouseenter', function() {this.style.animation = 'pulse 1s infinite';
-        });
-        
-        submitBtn.addEventListener('mouseleave', function() {
-            this.style.animation = 'none';
-        });
-        
-    });
-</script>
 {% endblock %}

@@ -2,17 +2,27 @@
 {% block title %}تعديل فترة صيانة{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width:500px; margin:auto; margin-top:40px;">
-    <h2 class="text-center">✏️ تعديل فترة صيانة للملعب: {{ field.name }}</h2>
+<div class="container animated-container" style="max-width:500px; margin:auto; margin-top:40px;">
+    
+    <h2 class="text-center maintenance-title" style="font-size: 1.8rem;">✏️ تعديل فترة صيانة: {{ field.name }}</h2>
 
-    <form method="post" class="mt-4">
+    <form method="post" class="modern-form maintenance-form mt-4">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary w-100">💾 حفظ التعديلات</button>
+        
+        {% for field in form %}
+        <div class="icon-field-wrapper maintenance-wrapper">
+            <p>
+                {{ field.label_tag }}
+                {{ field }}
+            </p>
+        </div>
+        {% endfor %}
+        
+        <button type="submit" class="btn btn-modern btn-primary w-100">💾 حفظ التعديلات</button>
     </form>
 
     <div class="mt-3 text-center">
-        <a href="{% url 'stadium_detail' field.stadium.id %}" class="btn btn-secondary">↩️ رجوع</a>
+        <a href="{% url 'stadium_detail' field.stadium.id %}" class="btn btn-modern btn-outline-modern">↩️ رجوع</a>
     </div>
 </div>
 {% endblock %}
