@@ -249,11 +249,11 @@ def league_scorers_update(request, pk):
     if request.user != league.owner:
         return HttpResponseForbidden("🚫 لا تملك صلاحية تعديل هدافي هذا الدوري")
 
-    # 1. جلب المباريات وترتيبها (الأحدث أولاً)
+    # 1. جلب المباريات (الأحدث أولاً)
     all_matches = league.matches.all().order_by('-date')
 
-    # 2. تقسيم المباريات (5 مباريات فقط في الصفحة الواحدة)
-    paginator = Paginator(all_matches, 5) 
+    # 2. تقسيم الصفحات (جربنا 5، ويمكنك زيادتها الآن لأن القوائم أصبحت خفيفة)
+    paginator = Paginator(all_matches, 5)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -261,13 +261,18 @@ def league_scorers_update(request, pk):
 
     if request.method == "POST":
         all_valid = True
-        # نتعامل فقط مع المباريات المعروضة في الصفحة الحالية
         for match in page_obj:
             formset = GoalScorerFormSet(
                 request.POST, request.FILES,
                 instance=match,
                 prefix=str(match.id)
             )
+            
+            # 🔥 السطر السحري: تحديد الفريقين فقط في القائمة (للفحص)
+            match_teams = Team.objects.filter(id__in=[match.team_a.id, match.team_b.id])
+            for form in formset:
+                form.fields['team'].queryset = match_teams
+            
             formsets.append((match, formset))
             if not formset.is_valid():
                 all_valid = False
@@ -275,22 +280,35 @@ def league_scorers_update(request, pk):
         if all_valid:
             for match, formset in formsets:
                 formset.save()
-            # البقاء في نفس الصفحة بعد الحفظ أو الذهاب للقائمة
-            return redirect("league_scorers", pk=league.id)
+            
+            # العودة لنفس الصفحة
+            current_page = request.GET.get('page', 1)
+            return redirect(f"{reverse('league_scorers_update', args=[league.pk])}?page={current_page}")
 
     else:
-        # عرض الفورم للمباريات الـ 5 الحالية فقط
         for match in page_obj:
             formset = GoalScorerFormSet(
                 instance=match,
                 prefix=str(match.id)
             )
+            
+            # 🔥 السطر السحري: تحديد الفريقين فقط في القائمة (للعرض)
+            # 1. نحدد الفريقين الخاصين بهذه المباراة فقط
+            match_teams = Team.objects.filter(id__in=[match.team_a.id, match.team_b.id])
+            
+            # 2. نطبق هذا التحديد على جميع الخانات الموجودة (للأهداف المسجلة سابقاً)
+            for form in formset.forms:
+                form.fields['team'].queryset = match_teams
+            
+            # 3. نطبق هذا التحديد على "الخانات الفارغة" (زر إضافة جديد)
+            formset.empty_form.fields['team'].queryset = match_teams
+
             formsets.append((match, formset))
 
     return render(request, "leagues/league_scorers_update.html", {
         "league": league,
         "formsets": formsets,
-        "page_obj": page_obj, # <-- نمرر كائن التقسيم للقالب لإظهار أزرار التالي/السابق
+        "page_obj": page_obj,
     })
 
 @login_required
