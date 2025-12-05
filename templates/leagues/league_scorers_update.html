@@ -39,6 +39,23 @@
         <div class="form-buttons">
             <button type="submit" class="btn btn-modern">💾 حفظ التغييرات</button>
             <a href="{% url 'league_scorers' league.id %}" class="btn btn-modern btn-outline-modern">رجوع</a>
+            <div class="pagination" style="margin-top: 20px; text-align: center;">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-sm btn-outline-light">&laquo; الأولى</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-light">السابق</a>
+        {% endif %}
+
+        <span class="current" style="margin: 0 10px; color: white;">
+            صفحة {{ page_obj.number }} من {{ page_obj.paginator.num_pages }}
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-light">التالي</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-light">الأخيرة &raquo;</a>
+        {% endif %}
+    </span>
+</div>
         </div>
     </form>
 </div>
@@ -146,23 +163,7 @@
         box-shadow: 0 5px 15px rgba(206, 190, 8, 0.3);
     }
 </style>
-<div class="pagination" style="margin-top: 20px; text-align: center;">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1" class="btn btn-sm btn-outline-light">&laquo; الأولى</a>
-            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-sm btn-outline-light">السابق</a>
-        {% endif %}
 
-        <span class="current" style="margin: 0 10px; color: white;">
-            صفحة {{ page_obj.number }} من {{ page_obj.paginator.num_pages }}
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-sm btn-outline-light">التالي</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-sm btn-outline-light">الأخيرة &raquo;</a>
-        {% endif %}
-    </span>
-</div>
 {% endblock %}
 
 {% block extra_js %}
