@@ -285,12 +285,15 @@ table.table td:first-child {
     text-align: right;
     justify-content: start;
 }
+/* ✅ الكود الجديد: شعارات أكبر وبدون إطار دائري */
 table.table td:first-child img {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 1px solid var(--phosphor-yellow);
+    width: 60px; /* تكبير العرض */
+    height: 60px; /* تكبير الطول */
+    object-fit: contain; /* الحفاظ على أبعاد الشعار الأصلية دون قصه */
+    border-radius: 0; /* إلغاء الدوران (جعلها مربعة/طبيعية) */
+    border: none; /* إزالة الحدود الصفراء إذا رغبت، أو اتركها */
+    margin-left: 10px; /* مسافة صغيرة بين الشعار والاسم */
+    background-color: transparent; /* خلفية شفافة */
 }
 
 .table-mini-logo, .team-logo-in-table {
