@@ -2,6 +2,9 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 load_dotenv()
 
@@ -30,6 +33,8 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "corsheaders",
     "channels",
+    'cloudinary_storage',  
+    'cloudinary',
     # تطبيقاتك
     "apps.core",
     "stadiums",
@@ -144,3 +149,17 @@ LANGUAGE_CODE = "ar"
 TIME_ZONE = "Asia/Aden"
 USE_I18N = True
 USE_TZ = True
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dxvg8soe4', 
+    'API_KEY': '492567379386143',
+    'API_SECRET': '5dT60wh0fij-nX_dq9LzEpGB00g',
+}
+
+# جعل جانغو يستخدم Cloudinary لتخزين الصور (Media)
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# --- إعدادات روابط الدخول (مهمة جداً) ---
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'league_list'
+LOGOUT_REDIRECT_URL = 'login'

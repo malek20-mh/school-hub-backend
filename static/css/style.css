@@ -217,9 +217,9 @@ h3 {
     color: #fff;
     border: none;
 }
-.btn-warning { background-color: #f0ad4e; color: #fff; }
-.btn-primary { background-color: #0275d8; color: #fff; }
-.btn-success { background-color: #5cb85c; color: #fff; }
+.btn-warning { background-color: #f0ad4e; color: #11311d; }
+.btn-primary { background-color: #0275d8; color: #11311d; }
+.btn-success { background-color: #5cb85c; color: #11311d; }
 
 .btn-outline-yellow {
     background: transparent;
@@ -359,6 +359,8 @@ table.table td:first-child img {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    color: #12251a;
+    box-shadow: none;
 }
 
 .league-logo-container {
