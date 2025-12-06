@@ -8,8 +8,7 @@ from .models import League, Team, Match, GoalScorer, Group
 class LeagueForm(forms.ModelForm):
     class Meta:
         model = League
-        fields = ["name", "location","logo"]
-
+        fields = ["name", "location", "logo"]
 
 # ---------------------------
 # Team Form
@@ -26,6 +25,7 @@ class TeamForm(forms.ModelForm):
             self.fields["group"].queryset = Group.objects.filter(league=league)
         else:
             self.fields["group"].queryset = Group.objects.none()
+
 # ---------------------------
 # Match Form
 # ---------------------------
@@ -39,6 +39,13 @@ class MatchForm(forms.ModelForm):
             "red_cards_team_a", "red_cards_team_b"
         ]
 
+# ---------------------------
+# Group Form
+# ---------------------------
+class GroupForm(forms.ModelForm):
+    class Meta:
+        model = Group
+        fields = ["name"]
 
 # ---------------------------
 # Inline Formset for Teams
@@ -47,17 +54,17 @@ TeamFormSet = inlineformset_factory(
     League, Team,
     form=TeamForm,
     fields=["name", "logo", "group"],
-    extra=1,        # عدد الصفوف الفارغة لإضافة فرق جديدة
-    can_delete=True # يتيح حذف الفرق
+    extra=1,        # هنا لا بأس بـ 1 لأننا نستخدمه في صفحة منفصلة (team_add)
+    can_delete=True
 )
+
+# ---------------------------
+# Inline Formset for Goal Scorers (التعديل الحاسم هنا)
+# ---------------------------
 GoalScorerFormSet = inlineformset_factory(
     Match, GoalScorer,
     fields=["player_name", "team", "goals"],
-    extra=1,
+    # 👇 التغيير هنا: جعلناها 0 لتخفيف الحمل على الذاكرة في صفحة التعديل الجماعي
+    extra=0,   
     can_delete=True
 )
-class GroupForm(forms.ModelForm):
-    class Meta:
-        model = Group
-        fields = ["name"]  # إذا عندك حقول إضافية ضيفها
-
