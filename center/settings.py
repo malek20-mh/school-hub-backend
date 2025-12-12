@@ -2,9 +2,6 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import dj_database_url
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
 
 load_dotenv()
 
@@ -33,8 +30,6 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "corsheaders",
     "channels",
-    'cloudinary_storage',  
-    'cloudinary',
     # تطبيقاتك
     "apps.core",
     "stadiums",
@@ -75,7 +70,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "center.wsgi.application"
 ASGI_APPLICATION = "center.asgi.application"
 
-# --- إعدادات قاعدة البيانات (الجزء المصحح) ---
+# --- إعدادات قاعدة البيانات ---
 # يحاول جلب رابط قاعدة البيانات من Render أولاً
 database_url = os.getenv("DATABASE_URL")
 
@@ -101,7 +96,7 @@ else:
         }
     }
 
-# --- إعدادات الملفات الثابتة ---
+# --- إعدادات الملفات الثابتة (CSS, JS) ---
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
@@ -109,10 +104,10 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 # ضغط الملفات باستخدام WhiteNoise
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+# --- إعدادات الوسائط (لم نعد نستخدمها للتخزين السحابي لكن نبقيها للاحتياط) ---
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-LOGOUT_REDIRECT_URL = "stadium_list"
 
 # --- إعدادات Redis / Channels ---
 # إذا لم يوجد رابط REDIS_URL سيستخدم الرابط المحلي الافتراضي
@@ -150,16 +145,8 @@ TIME_ZONE = "Asia/Aden"
 USE_I18N = True
 USE_TZ = True
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dxvg8soe4', 
-    'API_KEY': '492567379386143',
-    'API_SECRET': '5dT60wh0fij-nX_dq9LzEpGB00g',
-}
 
-# جعل جانغو يستخدم Cloudinary لتخزين الصور (Media)
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-# --- إعدادات روابط الدخول (مهمة جداً) ---
+# --- إعدادات روابط الدخول ---
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'league_list'
 LOGOUT_REDIRECT_URL = 'login'

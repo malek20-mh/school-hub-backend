@@ -18,8 +18,8 @@
         </div>
 
         <div class="league-logo-container">
-            {% if league.logo %}
-                <img src="{{ league.logo.url }}" alt="{{ league.name }} logo" class="league-logo-detail">
+            {% if row.team.logo %}
+                <img src="{{ row.team.logo }}" alt="{{ row.team.name }}" class="team-logo-small">
             {% endif %}
             <h2>{{ league.name }}</h2> 
         </div>

@@ -21,7 +21,9 @@
                 <tr>
                     <td>
                         {% if league.logo %}
-                            <img src="{{ league.logo.url }}" alt="{{ league.name }}">
+                            <img src="{{ league.logo }}" alt="{{ league.name }}" class="league-list-logo">
+                        {% else %}
+                            <img src="https://placehold.co/50x50/png?text=No+Logo" alt="Default" class="league-list-logo">
                         {% endif %}
                         <a href="{% url 'league_detail' league.id %}" style="text-decoration: none; color: inherit;">
                             {{ league.name }}

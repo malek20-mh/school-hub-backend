@@ -26,7 +26,7 @@
                     <tr>
                         <!-- الحقول داخل الجدول سيتم تنسيقها عبر CSS تلقائياً -->
                         <td>{{ form.name }}</td>
-                        <td>{{ form.logo }}</td>
+                        <td><img src="{{ f.instance.logo }}" width="30" height="30"></td>
                         <td>{{ form.group }}</td>
                         <td class="text-center-cell">{{ form.DELETE }}</td>
                     </tr>

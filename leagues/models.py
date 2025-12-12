@@ -6,7 +6,7 @@ class League(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="leagues")
     location = models.CharField(max_length=200, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    logo = models.ImageField(upload_to='league_logos/', null=True, blank=True, verbose_name="شعار الدوري")
+    logo = models.URLField(max_length=500, null=True, blank=True, verbose_name="رابط شعار الدوري")
     def __str__(self):
         return self.name
 
@@ -21,7 +21,7 @@ class Team(models.Model):
     league = models.ForeignKey(League, on_delete=models.CASCADE, related_name="teams")
     group = models.ForeignKey(Group, on_delete=models.CASCADE, related_name="teams", null=True, blank=True)
     name = models.CharField(max_length=200)
-    logo = models.ImageField(upload_to="team_logos/", blank=True, null=True)
+    logo = models.URLField(max_length=500, blank=True, null=True, verbose_name="رابط شعار الفريق")
 
     def __str__(self):
         return f"{self.name} ({self.league.name})"
