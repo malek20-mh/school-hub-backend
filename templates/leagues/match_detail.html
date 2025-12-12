@@ -6,7 +6,7 @@
 
     <div class="match-league-header">
         {% if match.league.logo %}
-            <img src="{{ match.league.logo.url }}" alt="{{ match.league.name }} logo" class="match-league-logo">
+            <img src="{{ match.league.logo }}" alt="{{ match.league.name }} logo" class="match-league-logo">
         {% endif %}
         <h3>{{ match.league.name }}</h3>
         
@@ -16,7 +16,7 @@
     <div class="match-teams-card">
         <div class="team-info">
             {% if match.team_a.logo %}
-                <img src="{{ match.team_a.logo.url }}" alt="{{ match.team_a.name }}" class="team-logo-large">
+                <img src="{{ match.team_a.logo }}" alt="{{ match.team_a.name }}" class="team-logo-large">
             {% else %}
                 <div class="placeholder-logo">?</div>
             {% endif %}
@@ -29,7 +29,7 @@
         
         <div class="team-info">
             {% if match.team_b.logo %}
-                <img src="{{ match.team_b.logo.url }}" alt="{{ match.team_b.name }}" class="team-logo-large">
+                <img src="{{ match.team_b.logo }}" alt="{{ match.team_b.name }}" class="team-logo-large">
             {% else %}
                 <div class="placeholder-logo">?</div>
             {% endif %}

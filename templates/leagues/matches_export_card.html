@@ -11,7 +11,7 @@
     <div class="schedule-header">
         <div class="league-title-wrapper">
             {% if league.logo %}
-                <img src="{{ league.logo.url }}" alt="{{ league.name }} Logo" class="header-league-logo">
+                <img src="{{ league.logo }}" alt="{{ league.name }} Logo" class="header-league-logo">
             {% endif %}
             <h2 class="header-title">جدول مبارايات الجولة الاولى <p class="league-name-sub">{{ league.name }}</p></h2>
         </div>
@@ -26,7 +26,7 @@
                     <h3 class="team-name">{{ match.team_a.name }}</h3>
                     <div class="team-logo-display">
                         {% if match.team_a.logo %}
-                            <img src="{{ match.team_a.logo.url }}" alt="{{ match.team_a.name }}">
+                            <img src="{{ match.team_a.logo }}" alt="{{ match.team_a.name }}">
                         {% else %}
                             <span>?</span>
                         {% endif %}
@@ -55,7 +55,7 @@
                 <div class="team-side team-left">
                     <div class="team-logo-display">
                         {% if match.team_b.logo %}
-                            <img src="{{ match.team_b.logo.url }}" alt="{{ match.team_b.name }}">
+                            <img src="{{ match.team_b.logo }}" alt="{{ match.team_b.name }}">
                         {% else %}
                             <span>?</span>
                         {% endif %}
