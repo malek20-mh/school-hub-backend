@@ -21,12 +21,14 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     ".onrender.com" # يسمح بأي نطاق فرعي من ريندر
 ]
+
 # مهم جداً عند الرفع على Render (HTTPS)
 CSRF_TRUSTED_ORIGINS = [
     "https://badan-league18.onrender.com", # ✅ الرابط الجديد
     "https://school-hub-api.onrender.com",
     "https://*.onrender.com", # هذا السطر ذكي جداً ويبقيك في الأمان
 ]
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
