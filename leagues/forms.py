@@ -38,8 +38,6 @@ class MatchForm(forms.ModelForm):
             "yellow_cards_team_a", "yellow_cards_team_b",
             "red_cards_team_a", "red_cards_team_b"
         ]
-
-
 # ---------------------------
 # Group Form
 # ---------------------------
