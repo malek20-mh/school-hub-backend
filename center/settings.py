@@ -14,11 +14,19 @@ SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret")
 DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 # السماح لجميع النطاقات مؤقتاً
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "*").split(",")
-
+ALLOWED_HOSTS = [
+    "badan-league18.onrender.com",  # ✅ الاسم الجديد (المهم جداً)
+    "school-hub-api.onrender.com",  # الاسم القديم (احتياط)
+    "localhost", 
+    "127.0.0.1",
+    ".onrender.com" # يسمح بأي نطاق فرعي من ريندر
+]
 # مهم جداً عند الرفع على Render (HTTPS)
-CSRF_TRUSTED_ORIGINS = ["https://*.onrender.com"]
-
+CSRF_TRUSTED_ORIGINS = [
+    "https://badan-league18.onrender.com", # ✅ الرابط الجديد
+    "https://school-hub-api.onrender.com",
+    "https://*.onrender.com", # هذا السطر ذكي جداً ويبقيك في الأمان
+]
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
