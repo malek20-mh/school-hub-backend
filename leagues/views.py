@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from .models import League, Match, GoalScorer, Team, Group
 from .forms import LeagueForm, MatchForm, TeamFormSet, GoalScorerFormSet,  GroupForm, TeamForm
 from django.forms import inlineformset_factory, modelformset_factory
+from django.db.models import Sum 
 
 # ---------------------------
 # قائمة الدوريات
@@ -111,9 +112,14 @@ def league_matches(request, pk):
 # ---------------------------
 def league_scorers(request, pk):
     league = get_object_or_404(League, pk=pk)
-    scorers = GoalScorer.objects.filter(match__league=league).order_by("-goals")
-    return render(request, "leagues/league_scorers.html", {"league": league, "scorers": scorers})
+    
+    # نقوم بتجميع الأهداف حسب اسم اللاعب والفريق
+    scorers = GoalScorer.objects.filter(match__league=league) \
+        .values('player_name', 'team__name', 'team__logo') \
+        .annotate(total_goals=Sum('goals')) \
+        .order_by('-total_goals')
 
+    return render(request, "leagues/league_scorers.html", {"league": league, "scorers": scorers})
 # ---------------------------
 # إنشاء دوري
 # ---------------------------
