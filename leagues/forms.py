@@ -65,6 +65,6 @@ GoalScorerFormSet = inlineformset_factory(
     Match, GoalScorer,
     fields=["player_name", "team", "goals"],
     # 👇 التغيير هنا: جعلناها 0 لتخفيف الحمل على الذاكرة في صفحة التعديل الجماعي
-    extra=0,   
+    extra=1,   
     can_delete=True
 )
