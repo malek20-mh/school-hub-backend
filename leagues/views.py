@@ -481,7 +481,7 @@ def knockout_setup(request, league_id):
 
     # 2. عرض الصفحة (GET): جلب الفرق مرتبة
     # نجلب الفرق ونرتبها حسب المجموعات والنقاط ليختار منها الآدمن بسهولة
-    teams = Team.objects.filter(league=league).order_by('group', '-points')
+    teams = Team.objects.filter(league=league).order_by('group', 'name')
     return render(request, 'leagues/knockout_setup.html', {'league': league, 'teams': teams})
 
 # فيو لعرض الشجرة
