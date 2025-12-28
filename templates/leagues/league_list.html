@@ -216,13 +216,62 @@
     }
 
     // 3. دالة لإظهار/إخفاء القائمة عند الضغط
-    function toggleNotifications() {
+   // 3. دالة لإظهار/إخفاء القائمة + تصفير العداد
+    async function toggleNotifications() {
         const dropdown = document.getElementById('notificationList');
+        const badgeElement = document.getElementById('notificationBadge');
+
         if (dropdown.style.display === 'block') {
+            // إذا كانت مفتوحة ونريد إغلاقها
             dropdown.style.display = 'none';
         } else {
+            // إذا كنا بصدد فتحها
             dropdown.style.display = 'block';
+
+            // 1. إخفاء العداد الأحمر فوراً (تجربة مستخدم سريعة)
+            if (badgeElement.style.display !== 'none') {
+                badgeElement.style.display = 'none';
+                
+                // 2. إزالة لون التمييز الأزرق من العناصر في القائمة
+                const unreadItems = document.querySelectorAll('.notif-item.unread');
+                unreadItems.forEach(item => {
+                    item.classList.remove('unread');
+                    item.style.backgroundColor = 'white'; // إعادة اللون للأبيض
+                });
+
+                // 3. إرسال طلب للسيرفر ليحفظ أنها قُرأت (في الخلفية)
+                try {
+                    // نحتاج للتوكن من الكوكيز للحماية (CSRF)
+                    const csrftoken = getCookie('csrftoken'); 
+                    
+                    await fetch('/api/notifications/mark-all-read/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken 
+                        }
+                    });
+                } catch (error) {
+                    console.error('Failed to mark notifications as read', error);
+                }
+            }
         }
+    }
+
+    // دالة مساعدة لجلب التوكن (CSRF) المطلوبة في دجانغو
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 
     // تشغيل الدالة عند تحميل الصفحة
