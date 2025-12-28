@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "stadiums",
     "users",
     "leagues",
+    "notifications",
 ]
 
 MIDDLEWARE = [
