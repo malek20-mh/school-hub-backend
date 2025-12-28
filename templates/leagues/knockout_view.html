@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>🏆 الأدوار الإقصائية (Playoffs)</h2>
+        {% if request.user == league.owner %}
+        <a href="{% url 'knockout_setup' league.id %}" class="btn btn-warning">⚙️ إعادة ضبط الشجرة</a>
+        {% endif %}
+    </div>
+
+    <div class="bracket-container">
+        {% for round_name, matches in rounds.items %}
+        <div class="round">
+            <div class="round-title">{{ round_name }}</div>
+            {% for match in matches %}
+            <div class="match-card">
+                <div class="team-row {% if match.winner == match.team1 %}winner{% endif %}">
+                    <span>
+                        {% if match.team1 %}
+                            <img src="{{ match.team1.logo.url|default:'' }}" width="20" height="20"> {{ match.team1.name }}
+                        {% else %}
+                            ---
+                        {% endif %}
+                    </span>
+                    <span class="badge bg-light text-dark border">{{ match.score1 }}</span>
+                </div>
+                
+                <hr style="margin: 5px 0;">
+
+                <div class="team-row {% if match.winner == match.team2 %}winner{% endif %}">
+                    <span>
+                        {% if match.team2 %}
+                            <img src="{{ match.team2.logo.url|default:'' }}" width="20" height="20"> {{ match.team2.name }}
+                        {% else %}
+                            ---
+                        {% endif %}
+                    </span>
+                    <span class="badge bg-light text-dark border">{{ match.score2 }}</span>
+                </div>
+
+                {% if request.user == league.owner and match.team1 and match.team2 and not match.winner %}
+                <div class="text-center mt-2">
+                    <a href="#" class="btn btn-sm btn-outline-primary py-0" style="font-size: 0.7rem;">تحديث</a>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        
+        <div class="round justify-content-center">
+            <div class="round-title">👑 البطل</div>
+            <div class="match-card text-center py-4 border-warning">
+                <h4 class="text-warning">؟</h4>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

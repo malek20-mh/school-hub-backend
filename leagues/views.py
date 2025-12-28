@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from .models import League, Match, GoalScorer, Team, Group
+from .models import League, Match, GoalScorer, Team, Group, KnockoutMatch
 from .forms import LeagueForm, MatchForm, TeamFormSet, GoalScorerFormSet,  GroupForm, TeamForm
 from django.forms import inlineformset_factory, modelformset_factory
 from django.db.models import Sum 
-
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+import math
 # ---------------------------
 # قائمة الدوريات
 # ---------------------------
@@ -396,3 +398,103 @@ def generate_matches_card(request):
         
     # إذا لم يكن الطلب POST (مثل الوصول المباشر للرابط)، نوجه المستخدم
     return redirect('league_list')
+
+def knockout_setup(request, league_id):
+    league = get_object_or_404(League, id=league_id)
+    
+    # 1. إذا تم إرسال النموذج (الضغط على زر إنشاء الشجرة)
+    if request.method == 'POST':
+        selected_team_ids = request.POST.getlist('selected_teams')
+        
+        # التأكد أن العدد هو من مضاعفات 2 (4, 8, 16, 32)
+        count = len(selected_team_ids)
+        if count not in [4, 8, 16, 32]:
+            messages.error(request, f"عدد الفرق المختارة ({count}) غير صحيح! يجب أن يكون 4، 8، 16، أو 32 لعمل شجرة متوازنة.")
+            return redirect('knockout_setup', league_id=league.id)
+
+        # حذف أي شجرة سابقة لهذا الدوري (اختياري، لبدء جديد)
+        KnockoutMatch.objects.filter(league=league).delete()
+
+        # جلب كائنات الفرق المختارة
+        teams = list(Team.objects.filter(id__in=selected_team_ids))
+        
+        # --- خوارزمية التوزيع (الأول ضد الثاني) ---
+        # نفترض أن القائمة مرتبة حسب المجموعات (A1, A2, B1, B2...)
+        # سنقوم بترتيبهم يدوياً لضمان المواجهة العادلة
+        # في المواقع العالمية: A1 vs B2, C1 vs D2 ... 
+        
+        matches_in_first_round = count // 2
+        round_name = count 
+        
+        # إنشاء المباريات الفارغة لكل الأدوار أولاً
+        current_round_matches = []
+        
+        # الدور الأول (الذي فيه الفرق)
+        for i in range(matches_in_first_round):
+            # محاولة تطبيق منطق: الأول من مجموعة يواجه الثاني من التالية
+            # هذه مصفوفة بسيطة للمواجهات: الفريق i يواجه الفريق i+1 (إذا كانت القائمة مرتبة)
+            # سنعتمد على ترتيب الآدمن في القائمة
+            
+            t1 = teams[i * 2]     # الفريق الزوجي (مثلاً الأول)
+            t2 = teams[i * 2 + 1] # الفريق الفردي (مثلاً الثاني)
+            
+            match = KnockoutMatch.objects.create(
+                league=league,
+                round_number=round_name,
+                match_order=i + 1,
+                team1=t1,
+                team2=t2
+            )
+            current_round_matches.append(match)
+
+        # إنشاء الأدوار التالية فارغة وربطها
+        previous_round_matches = current_round_matches
+        next_round_count = round_name // 2
+        
+        while next_round_count >= 2: # حتى نصل للنهائي
+            new_round_matches = []
+            for i in range(0, len(previous_round_matches), 2):
+                # ننشئ مباراة في الدور التالي تستقبل الفائزين من المباراتين السابقتين
+                next_match = KnockoutMatch.objects.create(
+                    league=league,
+                    round_number=next_round_count,
+                    match_order=(i // 2) + 1
+                )
+                
+                # ربط المباراتين السابقتين بهذه المباراة الجديدة
+                m1 = previous_round_matches[i]
+                m2 = previous_round_matches[i+1]
+                
+                m1.next_match = next_match
+                m1.save()
+                
+                m2.next_match = next_match
+                m2.save()
+                
+                new_round_matches.append(next_match)
+            
+            previous_round_matches = new_round_matches
+            next_round_count //= 2
+
+        messages.success(request, "تم إنشاء شجرة الدوري بنجاح! 🌳")
+        return redirect('league_knockout', league_id=league.id)
+
+    # 2. عرض الصفحة (GET): جلب الفرق مرتبة
+    # نجلب الفرق ونرتبها حسب المجموعات والنقاط ليختار منها الآدمن بسهولة
+    teams = Team.objects.filter(league=league).order_by('group', '-points')
+    return render(request, 'leagues/knockout_setup.html', {'league': league, 'teams': teams})
+
+# فيو لعرض الشجرة
+def league_knockout(request, league_id):
+    league = get_object_or_404(League, id=league_id)
+    matches = KnockoutMatch.objects.filter(league=league).order_by('-round_number', 'match_order')
+    
+    # تجميع المباريات حسب الدور للعرض
+    rounds = {}
+    for match in matches:
+        r_name = match.get_round_number_display()
+        if r_name not in rounds:
+            rounds[r_name] = []
+        rounds[r_name].append(match)
+        
+    return render(request, 'leagues/knockout_view.html', {'league': league, 'rounds': rounds})

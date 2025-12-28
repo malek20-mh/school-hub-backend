@@ -11,9 +11,11 @@
                 {% if user == league.owner %}
                     <a href="{% url 'league_update' league.pk %}" class="btn btn-warning btn-modern">✏️ تعديل الدوري</a>
                     <a href="{% url 'league_delete' league.pk %}" class="btn btn-danger btn-modern">🗑️ حذف الدوري</a>
+                    <a href="{% url 'knockout_setup' league.id %}" class="btn btn-dark btn-modern">⚙️ إعداد الإقصائيات</a>
                 {% endif %}
                 <a href="{% url 'league_matches' league.id %}" class="btn btn-primary btn-modern">📅 عرض المواجهات</a>
                 <a href="{% url 'league_scorers' league.id %}" class="btn btn-success btn-modern">⚽ عرض الهدافين</a>
+                <a href="{% url 'league_knockout' league.id %}" class="btn btn-info btn-modern" >🏆 الأدوار الإقصائية</a>
             </div>
         </div>
 

@@ -1146,3 +1146,299 @@ input[type="time"]::-webkit-calendar-picker-indicator {
 
 /* إخفاء أيقونة المفتاح إذا كانت تسبب مشاكل */
 .auth-title::before { display: none; }
+/* =========================================
+   11. نظام الإشعارات (Notifications)
+   ========================================= */
+.header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+}
+
+.notification-btn {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    position: relative;
+    color: var(--white);
+    transition: transform 0.2s, color 0.3s;
+}
+
+.notification-btn:hover {
+    transform: scale(1.1);
+    color: var(--phosphor-yellow);
+    text-shadow: 0 0 10px rgba(228, 255, 0, 0.5);
+}
+
+.badge-counter {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--maintenance-red);
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    display: none; /* مخفي افتراضياً */
+    animation: bounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes bounce {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.notifications-dropdown {
+    position: absolute;
+    top: 50px;
+    left: 0; /* في العربية قد تحتاج لتغييرها حسب الاتجاه */
+    width: 320px;
+    background: var(--medium-black);
+    border: 1px solid var(--phosphor-yellow);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    z-index: 2000;
+    display: none;
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--phosphor-yellow) var(--dark-black);
+}
+
+.notifications-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+.notifications-dropdown::-webkit-scrollbar-thumb {
+    background-color: var(--phosphor-yellow);
+    border-radius: 3px;
+}
+
+.notif-item {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.2s;
+    text-align: right;
+    color: var(--white);
+}
+
+.notif-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.notif-item.unread {
+    background-color: rgba(228, 255, 0, 0.05);
+    border-right: 3px solid var(--phosphor-yellow);
+}
+
+.notif-title {
+    font-weight: bold;
+    font-size: 1rem;
+    color: var(--phosphor-yellow);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.notif-msg {
+    font-size: 0.9rem;
+    color: #ccc;
+    display: block;
+    line-height: 1.4;
+}
+
+.notif-date {
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-top: 8px;
+    display: block;
+    text-align: left;
+}
+
+.empty-msg {
+    padding: 20px;
+    text-align: center;
+    color: var(--gray);
+    font-style: italic;
+}
+
+/* =========================================
+   12. نظام خروج المغلوب (Knockout Bracket)
+   ========================================= */
+.bracket-container {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 40px;
+    background: rgba(0, 0, 0, 0.3); /* خلفية داكنة للشجرة */
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    scrollbar-width: thin;
+    scrollbar-color: var(--phosphor-yellow) transparent;
+}
+
+.bracket-container::-webkit-scrollbar {
+    height: 8px;
+}
+.bracket-container::-webkit-scrollbar-track {
+    background: rgba(0,0,0,0.1);
+}
+.bracket-container::-webkit-scrollbar-thumb {
+    background: var(--phosphor-yellow);
+    border-radius: 4px;
+}
+
+.round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    min-width: 280px;
+    margin-right: 50px; /* مسافة بين الأعمدة */
+    position: relative;
+}
+
+.round-title {
+    text-align: center;
+    font-weight: 800;
+    margin-bottom: 25px;
+    color: var(--dark-black);
+    background: linear-gradient(45deg, var(--phosphor-yellow), var(--phosphor-yellow-light));
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 0 10px rgba(228, 255, 0, 0.2);
+}
+
+.match-card {
+    background: var(--light-black);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    margin: 15px 0;
+    position: relative;
+    transition: transform 0.2s, border-color 0.2s;
+}
+
+.match-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--phosphor-yellow);
+}
+
+/* خطوط الشجرة (Connectors) */
+.round:not(:last-child) .match-card::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 100%; /* الخط يخرج من اليسار لأن الموقع RTL */
+    width: 50px; /* طول الخط */
+    height: 2px;
+    background: var(--gray);
+    z-index: 1;
+}
+
+.team-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.team-row span:first-child {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.team-row img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* تمييز الفائز */
+.team-row.winner {
+    background-color: rgba(228, 255, 0, 0.1);
+    border: 1px solid rgba(228, 255, 0, 0.3);
+}
+.team-row.winner span {
+    color: var(--phosphor-yellow);
+    font-weight: bold;
+}
+
+/* شارة النتيجة داخل الكارد */
+.match-card .badge {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background: rgba(0, 0, 0, 0.4);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.team-row.winner .badge {
+    background: var(--phosphor-yellow);
+    color: var(--dark-black);
+    border-color: var(--phosphor-yellow);
+}
+
+/* =========================================
+   13. صفحة إعداد الشجرة (Setup Checkboxes)
+   ========================================= */
+.team-check-card {
+    background: var(--light-black);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--white);
+}
+
+.team-check-card .card-header {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--phosphor-yellow);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-weight: bold;
+}
+
+.list-group-item-dark {
+    background-color: transparent;
+    border-color: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    transition: background 0.2s;
+}
+
+.list-group-item-dark:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* شريط التثبيت السفلي */
+.fixed-bottom-bar {
+    background: rgba(19, 18, 1, 0.95);
+    border-top: 2px solid var(--phosphor-yellow);
+    padding: 15px;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+}
+
+.count-badge {
+    font-size: 1.5rem;
+    padding: 5px 15px;
+    border-radius: 8px;
+    margin: 0 5px;
+}
+.count-badge.bg-success {
+    background-color: var(--white) !important; /* الأخضر */
+    color: black;
+}
+.count-badge.bg-danger {
+    background-color: var(--maintenance-red) !important;
+    color: white;
+}

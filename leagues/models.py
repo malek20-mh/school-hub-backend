@@ -54,3 +54,31 @@ class GoalScorer(models.Model):
 
     def __str__(self):
         return f"{self.player_name} - {self.goals} أهداف"
+
+class KnockoutMatch(models.Model):
+    ROUND_CHOICES = (
+        (32, 'دور الـ 32'),
+        (16, 'دور الـ 16'),
+        (8, 'ربع النهائي'),
+        (4, 'نصف النهائي'),
+        (2, 'النهائي'),
+        (1, 'البطل'), # اختياري
+    )
+
+    league = models.ForeignKey(League, on_delete=models.CASCADE, related_name='knockout_matches')
+    round_number = models.IntegerField(choices=ROUND_CHOICES) # مثال: 8 يعني ربع النهائي
+    match_order = models.IntegerField() # ترتيب المباراة في الشجرة (1, 2, 3...)
+    
+    # الفرق (يمكن أن تكون فارغة في البداية حتى يتأهلوا)
+    team1 = models.ForeignKey(Team, related_name='ko_home_matches', null=True, blank=True, on_delete=models.SET_NULL)
+    team2 = models.ForeignKey(Team, related_name='ko_away_matches', null=True, blank=True, on_delete=models.SET_NULL)
+    
+    score1 = models.IntegerField(default=0)
+    score2 = models.IntegerField(default=0)
+    winner = models.ForeignKey(Team, related_name='ko_wins', null=True, blank=True, on_delete=models.SET_NULL)
+    
+    # الرابط السحري للشجرة: الفائز في هذه المباراة يذهب إلى أي مباراة؟
+    next_match = models.ForeignKey('self', null=True, blank=True, related_name='previous_matches', on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return f"{self.league.name} - {self.get_round_number_display()} - Match {self.match_order}"

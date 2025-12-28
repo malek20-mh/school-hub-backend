@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>⚙️ إعداد خروج المغلوب - {{ league.name }}</h2>
+    <p class="text-muted">اختر الفرق المتأهلة. يجب أن يكون العدد (4, 8, 16, 32). <br>
+    <strong>ملاحظة:</strong> النظام سيرتب المواجهات بناءً على ترتيب اختيارك (الأول ضد الثاني في القائمة أدناه).</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="row">
+            {% regroup teams by group as group_list %}
+            {% for group in group_list %}
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-header bg-dark text-white">مجموعة {{ group.grouper.name }}</div>
+                    <ul class="list-group list-group-flush">
+                        {% for team in group.list %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <label class="d-flex align-items-center w-100" style="cursor: pointer;">
+                                <input type="checkbox" name="selected_teams" value="{{ team.id }}" 
+                                       class="form-check-input me-2 team-check"
+                                       {% if forloop.counter <= 2 %}checked{% endif %}> <span class="me-2">{{ forloop.counter }}. {{ team.name }}</span>
+                                <span class="badge bg-secondary ms-auto">{{ team.points }} ن</span>
+                            </label>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="fixed-bottom bg-white p-3 border-top shadow text-center">
+            <h4>العدد المختار: <span id="count-badge" class="badge bg-primary">0</span></h4>
+            <button type="submit" class="btn btn-success btn-lg px-5">إنشاء الشجرة 🌳</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
