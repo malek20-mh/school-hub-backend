@@ -2,9 +2,122 @@
 {% block title %}الدوريات{% endblock %}
 
 {% block content %}
+<style>
+    /* تنسيق حاوية العنوان والجرس */
+    .header-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    /* تنسيق زر الجرس */
+    .notification-btn {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        position: relative;
+        color: #333;
+        transition: transform 0.2s;
+    }
+    
+    .notification-btn:hover {
+        transform: scale(1.1);
+        color: #007bff;
+    }
+
+    /* النقطة الحمراء (العداد) */
+    .badge-counter {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: #dc3545;
+        color: white;
+        border-radius: 50%;
+        padding: 2px 6px;
+        font-size: 0.7rem;
+        font-weight: bold;
+        display: none; /* مخفي افتراضياً حتى تأتي إشعارات */
+    }
+
+    /* القائمة المنسدلة للإشعارات */
+    .notifications-dropdown {
+        position: absolute;
+        top: 40px; /* أسفل الجرس */
+        left: 0; /* محاذاة لليسار */
+        width: 300px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        display: none; /* مخفي افتراضياً */
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    /* عنصر الإشعار الواحد */
+    .notif-item {
+        padding: 12px;
+        border-bottom: 1px solid #eee;
+        transition: background 0.2s;
+        text-align: right;
+    }
+
+    .notif-item:hover {
+        background-color: #f8f9fa;
+    }
+
+    .notif-item.unread {
+        background-color: #e8f4ff; /* لون مميز لغير المقروء */
+        border-right: 3px solid #007bff;
+    }
+
+    .notif-title {
+        font-weight: bold;
+        font-size: 0.9rem;
+        display: block;
+    }
+
+    .notif-msg {
+        font-size: 0.85rem;
+        color: #666;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .notif-date {
+        font-size: 0.7rem;
+        color: #999;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .empty-msg {
+        padding: 20px;
+        text-align: center;
+        color: #777;
+    }
+</style>
+
 <div class="container card-3d" style="margin-top: 30px;">
     
-    <h2>🏆 جميع الدوريات</h2>
+    <div class="header-wrapper">
+        <h2>🏆 جميع الدوريات</h2>
+        
+        <div style="position: relative;">
+            <button class="notification-btn" onclick="toggleNotifications()">
+                🔔
+                <span id="notificationBadge" class="badge-counter">0</span>
+            </button>
+            
+            <div id="notificationList" class="notifications-dropdown">
+                <div class="empty-msg">جاري التحميل...</div>
+            </div>
+        </div>
+    </div>
     
     <div class="table-responsive">
         <table class="table table-striped">
@@ -45,4 +158,82 @@
         </table>
     </div>
 </div>
+
+<script>
+    // 1. دالة لجلب الإشعارات من الـ API
+    async function fetchNotifications() {
+        try {
+            const response = await fetch('/api/notifications/');
+            if (response.ok) {
+                const data = await response.json();
+                updateNotificationUI(data);
+            }
+        } catch (error) {
+            console.error('Error loading notifications:', error);
+        }
+    }
+
+    // 2. دالة لتحديث الواجهة بالبيانات
+    function updateNotificationUI(notifications) {
+        const listElement = document.getElementById('notificationList');
+        const badgeElement = document.getElementById('notificationBadge');
+        
+        // تصفية الإشعارات غير المقروءة للعداد
+        const unreadCount = notifications.filter(n => !n.is_read).length;
+
+        // تحديث العداد الأحمر
+        if (unreadCount > 0) {
+            badgeElement.innerText = unreadCount;
+            badgeElement.style.display = 'block';
+        } else {
+            badgeElement.style.display = 'none';
+        }
+
+        // بناء قائمة الإشعارات HTML
+        if (notifications.length === 0) {
+            listElement.innerHTML = '<div class="empty-msg">لا توجد إشعارات جديدة</div>';
+            return;
+        }
+
+        let htmlContent = '';
+        notifications.forEach(notif => {
+            // تحويل التاريخ لصيغة مقروءة
+            const date = new Date(notif.created_at).toLocaleDateString('ar-YE');
+            
+            // إضافة كلاس unread إذا لم يكن مقروءاً
+            const unreadClass = notif.is_read ? '' : 'unread';
+
+            htmlContent += `
+                <div class="notif-item ${unreadClass}">
+                    <span class="notif-title">${notif.title}</span>
+                    <span class="notif-msg">${notif.message}</span>
+                    <span class="notif-date">${date}</span>
+                </div>
+            `;
+        });
+
+        listElement.innerHTML = htmlContent;
+    }
+
+    // 3. دالة لإظهار/إخفاء القائمة عند الضغط
+    function toggleNotifications() {
+        const dropdown = document.getElementById('notificationList');
+        if (dropdown.style.display === 'block') {
+            dropdown.style.display = 'none';
+        } else {
+            dropdown.style.display = 'block';
+        }
+    }
+
+    // تشغيل الدالة عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', fetchNotifications);
+
+    // إغلاق القائمة عند الضغط خارجها
+    window.onclick = function(event) {
+        if (!event.target.matches('.notification-btn') && !event.target.matches('.notification-btn *')) {
+            document.getElementById('notificationList').style.display = "none";
+        }
+    }
+</script>
+
 {% endblock %}
