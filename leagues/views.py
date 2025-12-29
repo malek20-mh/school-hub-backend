@@ -2,14 +2,13 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from .models import League, Match, GoalScorer, Team, Group, KnockoutMatch
-from .forms import LeagueForm, MatchForm, TeamFormSet, GoalScorerFormSet,  GroupForm, TeamForm
+from .forms import LeagueForm, MatchForm, TeamFormSet, GoalScorerFormSet,  GroupForm, TeamForm, KnockoutMatchForm
 from django.forms import inlineformset_factory, modelformset_factory
 from django.db.models import Sum , Count, Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 import math
 from django.utils import timezone
-
 # ---------------------------
 # قائمة الدوريات
 # ---------------------------
