@@ -224,17 +224,18 @@
                         </div>
                         <span class="score-badge">{{ match.score2 }}</span>
                     </div>
-                    {% if request.user == league.owner %}
-                        <div class="text-center mt-2 pt-2" style="border-top: 1px dashed rgba(255,255,255,0.1); display: flex; justify-content: center; gap: 10px;">
-                            <a href="{% url 'edit_knockout_match' match.id %}" class="btn btn-sm btn-outline-warning" title="تعديل التفاصيل">
-                                ⚙️ تعديل
-                            </a>
-                            
-                            <a href="{% url 'match_update' match.id %}" class="btn btn-sm btn-outline-primary" title="رصد النتيجة">
-                                ⚽ النتيجة
-                            </a>
-                        </div>
-                    {% endif %}
+                        {% if request.user == league.owner %}
+                            <div class="text-center mt-2 pt-2" style="border-top: 1px dashed rgba(255,255,255,0.1); display: flex; justify-content: center; gap: 10px;">
+                                <a href="{% url 'knockout_edit' match.id %}" class="btn btn-sm btn-outline-warning" title="تعديل التفاصيل">
+                                    ⚙️ تعديل
+                                </a>
+                                
+                                <a href="{% url 'match_update' match.id %}" class="btn btn-sm btn-outline-primary" title="رصد النتيجة">
+                                    ⚽ النتيجة
+                                </a>
+                            </div>
+                        {% else %}
+                        {% endif %}
                 </div>
                 {% endfor %}
         </div>
@@ -315,11 +316,6 @@
                             </div>
                             <span class="score-badge">{{ match.score2 }}</span>
                         </div>
-                        {% if request.user == league.owner %}
-                            <div class="text-center mt-1" style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top:5px;">
-                                <a href="#" class="text-muted small" style="text-decoration: none;">✏️ تحديث النتيجة</a>
-                            </div>
-                        {% endif %}
                     </div>
                 {% endfor %}
             {% else %}
