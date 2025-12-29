@@ -602,3 +602,19 @@ def publish_knockout_to_main(request, league_id):
         return redirect('league_matches', league_id=league.id)
         
     return redirect('league_knockout', league_id=league.id)
+
+# leagues/views.py
+
+def league_knockout(request, league_id):
+    league = get_object_or_404(League, id=league_id)
+    matches = KnockoutMatch.objects.filter(league=league).order_by('-round_number', 'match_order')
+    
+    # تجميع المباريات حسب رقم الدور (16, 8, 4, 2) لسهولة العرض في القالب
+    rounds = {}
+    for match in matches:
+        r_num = match.round_number
+        if r_num not in rounds:
+            rounds[r_num] = []
+        rounds[r_num].append(match)
+        
+    return render(request, 'leagues/knockout_view.html', {'league': league, 'rounds': rounds})
