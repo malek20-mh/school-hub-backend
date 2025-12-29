@@ -562,59 +562,64 @@ def publish_knockout(request, league_id):
 
 def publish_knockout_to_main(request, league_id):
     league = get_object_or_404(League, id=league_id)
-    
-    # التحقق من أن المستخدم هو المالك
     if request.user != league.owner:
-        messages.error(request, "غير مسموح لك بهذا الإجراء")
         return redirect('league_knockout', league_id=league.id)
 
     if request.method == 'POST':
-        # 1. جلب مباريات الشجرة المكتملة (التي فيها فريقين)
         ko_matches = KnockoutMatch.objects.filter(league=league).exclude(team1=None).exclude(team2=None)
+        count = 0
         
-        counter = 0
         for ko in ko_matches:
-            # 2. التحقق: هل هذه المباراة موجودة مسبقاً في الجدول الرئيسي؟ لتجنب التكرار
+            # دمج التاريخ والوقت ليناسب حقل date في Match (إذا كان DateTimeField)
+            # أو تركهما منفصلين حسب تصميم موديل Match لديك
+            # سنفترض هنا أن Match.date هو DateTimeField
+            
+            match_datetime = timezone.now() # افتراضي
+            if ko.date:
+                t = ko.time if ko.time else time(0,0) # وقت افتراضي منتصف الليل
+                match_datetime = datetime.combine(ko.date, t)
+                # جعل التوقيت واعي (Aware) للمنطقة الزمنية
+                match_datetime = timezone.make_aware(match_datetime)
+
+            # التحقق من التكرار
             exists = Match.objects.filter(
                 league=league,
                 home_team=ko.team1,
                 away_team=ko.team2,
-                round_name=ko.get_round_number_display() # مثل "ربع النهائي"
+                round_name=ko.get_round_number_display()
             ).exists()
-            
-            # 3. إذا لم تكن موجودة، قم بإنشائها
+
             if not exists:
                 Match.objects.create(
                     league=league,
                     home_team=ko.team1,
                     away_team=ko.team2,
-                    round_name=ko.get_round_number_display(), # اسم الدور
-                    date=timezone.now(), # تاريخ افتراضي (يمكنك تعديله لاحقاً من صفحة المباريات)
+                    date=match_datetime, # ✅ التاريخ من الشجرة
+                    stadium=ko.location, # ✅ المكان من الشجرة (تأكد أن موديل Match فيه حقل stadium أو location)
+                    round_name=ko.get_round_number_display(),
                     is_finished=False
                 )
-                counter += 1
+                count += 1
         
-        if counter > 0:
-            messages.success(request, f"تم ترحيل {counter} مباراة من الشجرة إلى جدول المواجهات بنجاح! ✅")
-        else:
-            messages.info(request, "لم يتم ترحيل أي مباراة (ربما هي موجودة بالفعل أو الشجرة فارغة).")
-            
+        messages.success(request, f"تم اعتماد {count} مباراة في الجدول الرسمي!")
         return redirect('league_matches', league_id=league.id)
         
     return redirect('league_knockout', league_id=league.id)
 
-# leagues/views.py
-
-def league_knockout(request, league_id):
-    league = get_object_or_404(League, id=league_id)
-    matches = KnockoutMatch.objects.filter(league=league).order_by('-round_number', 'match_order')
+def edit_knockout_match(request, match_id):
+    match = get_object_or_404(KnockoutMatch, id=match_id)
     
-    # تجميع المباريات حسب رقم الدور (16, 8, 4, 2) لسهولة العرض في القالب
-    rounds = {}
-    for match in matches:
-        r_num = match.round_number
-        if r_num not in rounds:
-            rounds[r_num] = []
-        rounds[r_num].append(match)
-        
-    return render(request, 'leagues/knockout_view.html', {'league': league, 'rounds': rounds})
+    # حماية: المالك فقط
+    if request.user != match.league.owner:
+        return redirect('league_knockout', league_id=match.league.id)
+
+    if request.method == 'POST':
+        form = KnockoutMatchForm(request.POST, instance=match)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "تم تحديث بيانات المباراة بنجاح ✅")
+            return redirect('league_knockout', league_id=match.league.id)
+    else:
+        form = KnockoutMatchForm(instance=match)
+
+    return render(request, 'leagues/knockout_edit.html', {'form': form, 'match': match})

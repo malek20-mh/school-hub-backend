@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import inlineformset_factory
-from .models import League, Team, Match, GoalScorer, Group  
+from .models import League, Team, Match, GoalScorer, Group, KnockoutMatch
 
 # ---------------------------
 # League Form
@@ -67,3 +67,22 @@ GoalScorerFormSet = inlineformset_factory(
     extra=1,   
     can_delete=True
 )
+
+class KnockoutMatchForm(forms.ModelForm):
+    class Meta:
+        model = KnockoutMatch
+        fields = ['team1', 'team2', 'date', 'time', 'location']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'time': forms.TimeInput(attrs={'type': 'time', 'class': 'form-control'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'اسم الملعب'}),
+            'team1': forms.Select(attrs={'class': 'form-select'}),
+            'team2': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # فلترة الفرق لتظهر فقط فرق هذا الدوري
+        if self.instance and self.instance.league:
+            self.fields['team1'].queryset = Team.objects.filter(league=self.instance.league)
+            self.fields['team2'].queryset = Team.objects.filter(league=self.instance.league)

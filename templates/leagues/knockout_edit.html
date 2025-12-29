@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card-3d" style="max-width: 600px; margin: 0 auto;">
+        <h3 class="text-center mb-4" style="color: var(--phosphor-yellow);">✏️ تعديل بيانات المباراة</h3>
+        <h5 class="text-center text-muted mb-4">{{ match.get_round_number_display }}</h5>
+
+        <form method="post" class="modern-form">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label>الفريق الأول (يمين)</label>
+                {{ form.team1 }}
+            </div>
+
+            <div class="mb-3">
+                <label>الفريق الثاني (يسار)</label>
+                {{ form.team2 }}
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label>التاريخ</label>
+                    {{ form.date }}
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label>الوقت</label>
+                    {{ form.time }}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label>المكان (الملعب)</label>
+                {{ form.location }}
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a href="{% url 'league_knockout' match.league.id %}" class="btn btn-outline-secondary">إلغاء</a>
+                <button type="submit" class="btn btn-success">💾 حفظ التعديلات</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

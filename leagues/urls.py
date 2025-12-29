@@ -20,4 +20,5 @@ urlpatterns = [
     path('<int:league_id>/knockout/', views.league_knockout, name='league_knockout'),
     path('<int:league_id>/knockout/publish/', views.publish_knockout, name='publish_knockout'),
     path('<int:league_id>/knockout/publish-to-main/', views.publish_knockout_to_main, name='publish_knockout_to_main'),
+    path('knockout/match/<int:match_id>/edit/', views.edit_knockout_match, name='edit_knockout_match'),
 ]

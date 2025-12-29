@@ -72,7 +72,9 @@ class KnockoutMatch(models.Model):
     # الفرق (يمكن أن تكون فارغة في البداية حتى يتأهلوا)
     team1 = models.ForeignKey(Team, related_name='ko_home_matches', null=True, blank=True, on_delete=models.SET_NULL)
     team2 = models.ForeignKey(Team, related_name='ko_away_matches', null=True, blank=True, on_delete=models.SET_NULL)
-    
+    date = models.DateField(null=True, blank=True, verbose_name="التاريخ")
+    time = models.TimeField(null=True, blank=True, verbose_name="الوقت")
+    location = models.CharField(max_length=100, null=True, blank=True, verbose_name="المكان")
     score1 = models.IntegerField(default=0)
     score2 = models.IntegerField(default=0)
     winner = models.ForeignKey(Team, related_name='ko_wins', null=True, blank=True, on_delete=models.SET_NULL)
