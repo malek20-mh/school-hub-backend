@@ -623,3 +623,19 @@ def edit_knockout_match(request, match_id):
         form = KnockoutMatchForm(instance=match)
 
     return render(request, 'leagues/knockout_edit.html', {'form': form, 'match': match})
+
+# أضف هذا في نهاية ملف leagues/views.py
+
+def league_knockout(request, league_id):
+    league = get_object_or_404(League, id=league_id)
+    matches = KnockoutMatch.objects.filter(league=league).order_by('-round_number', 'match_order')
+    
+    # تجميع المباريات حسب رقم الدور (16, 8, 4, 2) لسهولة العرض في القالب
+    rounds = {}
+    for match in matches:
+        r_num = match.round_number
+        if r_num not in rounds:
+            rounds[r_num] = []
+        rounds[r_num].append(match)
+        
+    return render(request, 'leagues/knockout_view.html', {'league': league, 'rounds': rounds})
