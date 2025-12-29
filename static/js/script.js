@@ -274,14 +274,26 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // دالة جلب الإشعارات من السيرفر
+    // دالة جلب الإشعارات من السيرفر
     async function fetchNotifications() {
-        if (!notificationBtn) return; // إذا لم يكن الزر موجوداً (غير مسجل دخول)
+        if (!notificationBtn) return; 
         
         try {
-            const response = await fetch('/api/notifications/');
+            // 👇 التعديل هنا: أضفنا الكائن الثاني الذي يحتوي على credentials
+            const response = await fetch('/api/notifications/', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') // يفضل إرساله للتأكد
+                },
+                credentials: 'include' // 👈👈 هذا هو السطر السحري! مهم جداً
+            });
+
             if (response.ok) {
                 const data = await response.json();
                 updateNotificationUI(data);
+            } else {
+                console.error('Server returned:', response.status);
             }
         } catch (error) {
             console.error('Error fetching notifications:', error);

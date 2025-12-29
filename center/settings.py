@@ -115,7 +115,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 # ضغط الملفات باستخدام WhiteNoise
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# --- إعدادات الوسائط (لم نعد نستخدمها للتخزين السحابي لكن نبقيها للاحتياط) ---
+# --- إعدادات الوسائط ---
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
@@ -139,10 +139,24 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "Asia/Aden"
 
-# DRF
+# ==========================================
+# 🔥 التعديل المهم جداً هنا (DRF Auth) 🔥
+# ==========================================
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    
+    # السماح للمستخدمين بالدخول عبر الجلسة (Session) والكوكيز
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',  # 👈 هذا يحل مشكلة الإشعارات
+        'rest_framework.authentication.BasicAuthentication',
+    ],
+    
+    # افتراضياً، يجب أن يكون المستخدم مسجلاً للدخول للوصول للـ API
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
 }
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "IBB Football Booking API",
     "VERSION": "0.1.0",
