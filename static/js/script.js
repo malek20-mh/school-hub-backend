@@ -1,11 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
     
     // ============================================================
-    // 🔔 1. نظام الإشعارات (Notifications System)
+    // 🔔 1. نظام الإشعارات الفوري (Real-time with Supabase) ⚡
     // ============================================================
     const notificationBtn = document.querySelector('.notification-btn');
     const notificationList = document.getElementById('notificationList');
     const badgeElement = document.getElementById('notificationBadge');
+
+    // 1. إعداد اتصال Supabase
+    let supabaseClient = null;
+    // نتأكد أن المكتبة تم تحميلها وأن المتغيرات معرفة في base.html
+    if (typeof supabase !== 'undefined' && typeof SUPABASE_URL !== 'undefined') {
+        supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        console.log("✅ Supabase connected successfully!");
+    } else {
+        console.warn("⚠️ Supabase is not initialized. Check base.html includes.");
+    }
 
     // دالة مساعدة لجلب CSRF Token
     function getCookie(name) {
@@ -23,9 +33,9 @@ document.addEventListener('DOMContentLoaded', function() {
         return cookieValue;
     }
 
-    // دالة جلب الإشعارات من السيرفر
+    // دالة جلب الإشعارات من السيرفر (للتحميل الأولي أو التحديث)
     async function fetchNotifications() {
-        if (!notificationBtn) return; // المستخدم غير مسجل دخول
+        if (!notificationBtn) return; 
         
         try {
             const response = await fetch('/api/notifications/', {
@@ -34,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': getCookie('csrftoken')
                 },
-                credentials: 'include' // ✅ أهم سطر للمصادقة
+                credentials: 'include' // ✅ مهم للمصادقة مع Django
             });
 
             if (response.ok) {
@@ -85,6 +95,36 @@ document.addEventListener('DOMContentLoaded', function() {
         notificationList.innerHTML = htmlContent;
     }
 
+    // 🔥 الاستماع الفوري (Realtime Listener) 🔥
+    if (supabaseClient && notificationBtn) {
+        // جلب البيانات الأولية عند فتح الصفحة
+        fetchNotifications();
+
+        console.log("📡 Listening for realtime changes...");
+
+        supabaseClient
+            .channel('realtime:notifications') // اسم القناة
+            .on('postgres_changes', { 
+                event: 'INSERT', 
+                schema: 'public', 
+                table: 'notifications_notification' // 👈 تأكدنا من الاسم في الصور السابقة
+            }, payload => {
+                console.log('🔔 New Realtime Signal:', payload);
+                
+                // هل الإشعار يخصني؟ (مقارنة ID المستخدم الحالي مع recipient_id في الصف الجديد)
+                if (typeof CURRENT_USER_ID !== 'undefined' && CURRENT_USER_ID !== 'null' && payload.new.recipient_id == CURRENT_USER_ID) {
+                    console.log("✨ Notification for me! Refreshing...");
+                    
+                    // تحديث القائمة فوراً
+                    fetchNotifications(); 
+                    
+                    // يمكنك إضافة صوت هنا إذا أردت
+                    // new Audio('/static/sounds/notification.mp3').play().catch(e=>{});
+                }
+            })
+            .subscribe();
+    }
+
     // التعامل مع النقر على زر الجرس
     if (notificationBtn) {
         notificationBtn.addEventListener('click', async function(e) {
@@ -100,11 +140,9 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 notificationList.style.display = 'block';
 
-                // تعليم الكل كمقروء إذا كان هناك جديد
+                // تعليم الكل كمقروء عند الفتح إذا كان هناك جديد
                 if (badgeElement.style.display !== 'none') {
-                    badgeElement.style.display = 'none';
-                    const unreadItems = document.querySelectorAll('.notif-item.unread');
-                    unreadItems.forEach(item => item.classList.remove('unread'));
+                    badgeElement.style.display = 'none'; // إخفاء العداد فوراً
 
                     try {
                         await fetch('/api/notifications/mark-all-read/', {
@@ -113,8 +151,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                 'Content-Type': 'application/json',
                                 'X-CSRFToken': getCookie('csrftoken')
                             },
-                            credentials: 'include' // ✅ مهم أيضاً للـ POST
+                            credentials: 'include'
                         });
+                        // تحديث الواجهة لإزالة التظليل
+                        const unreadItems = document.querySelectorAll('.notif-item.unread');
+                        unreadItems.forEach(item => item.classList.remove('unread'));
                     } catch (error) {
                         console.error('Failed to mark read:', error);
                     }
@@ -131,10 +172,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-
-    // تشغيل الإشعارات (لأول مرة + تكرار دوري)
-    fetchNotifications();
-    setInterval(fetchNotifications, 10000); // كل 10 ثواني
 
     // ============================================================
     // ✨ 2. تأثيرات عامة (UI Effects)
@@ -178,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 📸 3. وظائف التحميل كصورة (Image Export)
     // ============================================================
 
-    // دالة عامة لاستخدام html2canvas لتجنب التكرار
+    // دالة عامة لاستخدام html2canvas
     function captureAndDownload(elementId, btnElement, fileNamePrefix, scale=2) {
         const elementToSave = document.getElementById(elementId);
         if (!elementToSave) return;
@@ -253,10 +290,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadBracketBtn = document.getElementById('download-bracket-btn');
     if (downloadBracketBtn) {
         downloadBracketBtn.addEventListener('click', function() {
-            // نمرر الكلاس كـ ID للدالة المساعدة (تعديل بسيط للدالة قد يلزم، لكن هنا سنستخدم المنطق المباشر)
             const bracketContainer = document.querySelector('.bracket-container');
             if (bracketContainer) {
-                // نعطيها ID مؤقت إذا لم يكن لها
                 if (!bracketContainer.id) bracketContainer.id = 'temp-bracket-id';
                 captureAndDownload(bracketContainer.id, this, 'bracket');
             }
@@ -309,7 +344,6 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 countBadge.classList.remove('bg-success');
                 countBadge.classList.add('bg-danger');
-                // if(setupSubmitBtn) setupSubmitBtn.disabled = true;
             }
         }
         teamCheckboxes.forEach(cb => {
