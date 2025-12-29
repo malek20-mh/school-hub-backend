@@ -1,59 +1,334 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block title %}شجرة البطولة{% endblock %}
+
 {% block content %}
-<div class="container-fluid mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h2>🏆 الأدوار الإقصائية (Playoffs)</h2>
-        {% if request.user == league.owner %}
-        <a href="{% url 'knockout_setup' league.id %}" class="btn btn-warning">⚙️ إعادة ضبط الشجرة</a>
-        {% endif %}
+
+<style>
+    /* =========================================
+       تصميم شجرة البطولة (Split View)
+       ========================================= */
+    
+    /* حاوية الشجرة كاملة */
+    .bracket-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px; /* زيادة المسافة قليلاً */
+        padding: 40px 20px;
+        /* خلفية متدرجة دائرية أنيقة */
+        background: radial-gradient(circle at center, #222 0%, #111 100%);
+        overflow-x: auto;
+        min-height: 85vh;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        
+        /* تخصيص السكرول بار */
+        scrollbar-width: thin;
+        scrollbar-color: var(--phosphor-yellow) transparent;
+    }
+
+    .bracket-wrapper::-webkit-scrollbar { height: 8px; }
+    .bracket-wrapper::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+    .bracket-wrapper::-webkit-scrollbar-thumb { background: var(--phosphor-yellow); border-radius: 4px; }
+
+    /* الأعمدة (الأدوار) */
+    .bracket-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        gap: 20px;
+        width: 240px; /* عرض مناسب للبطاقة */
+        flex-shrink: 0;
+    }
+
+    /* عناوين الأدوار */
+    .round-header {
+        text-align: center;
+        color: var(--gray);
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* عمود النهائي (الوسط) */
+    .final-column {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 320px;
+        z-index: 10;
+        margin: 0 20px;
+    }
+
+    /* بطاقة المباراة */
+    .match-card {
+        background: rgba(26, 26, 26, 0.9);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 12px;
+        position: relative;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+        backdrop-filter: blur(5px);
+    }
+
+    .match-card:hover { 
+        border-color: var(--phosphor-yellow); 
+        transform: scale(1.03); 
+        box-shadow: 0 5px 20px rgba(228, 255, 0, 0.15);
+        z-index: 5;
+    }
+
+    /* الفرق داخل البطاقة */
+    .team-slot {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 8px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: #ddd;
+        font-size: 0.95rem;
+    }
+    .team-slot:last-child { border-bottom: none; }
+    
+    .team-slot.winner { 
+        background: rgba(228, 255, 0, 0.1); 
+        color: var(--phosphor-yellow); 
+        font-weight: bold; 
+        border-radius: 4px;
+    }
+    
+    .team-info-flex {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px;
+    }
+
+    .team-logo-mini { 
+        width: 24px; 
+        height: 24px; 
+        object-fit: contain; 
+    }
+
+    .score-badge {
+        background: rgba(0, 0, 0, 0.5);
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-family: monospace;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .team-slot.winner .score-badge {
+        background: var(--phosphor-yellow);
+        color: black;
+        border-color: var(--phosphor-yellow);
+    }
+
+    /* الكأس والشعار في المنتصف */
+    .champion-section {
+        text-align: center;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    
+    .league-logo-final {
+        width: 140px;
+        height: 140px;
+        object-fit: contain;
+        filter: drop-shadow(0 0 15px rgba(228, 255, 0, 0.4));
+        animation: glow 3s infinite alternate;
+    }
+    
+    @keyframes glow { 
+        from { filter: drop-shadow(0 0 10px rgba(228, 255, 0, 0.2)); transform: scale(1); } 
+        to { filter: drop-shadow(0 0 25px rgba(228, 255, 0, 0.6)); transform: scale(1.05); } 
+    }
+
+    .final-badge {
+        background: linear-gradient(45deg, gold, #ffcc00);
+        color: black;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-weight: bold;
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        white-space: nowrap;
+    }
+
+    /* أزرار التحكم */
+    .admin-controls {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn-floating {
+        padding: 12px 20px;
+        border-radius: 50px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: bold;
+        transition: transform 0.2s;
+    }
+    .btn-floating:hover { transform: translateY(-3px); }
+
+    /* خطوط الاتصال (بسيط) */
+    .bracket-column { position: relative; }
+    
+    /* Responsive */
+    @media (max-width: 992px) {
+        .bracket-wrapper {
+            justify-content: flex-start; /* السماح بالسكرول في الشاشات الصغيرة */
+        }
+    }
+</style>
+
+<div class="container-fluid" style="padding: 0;">
+    
+    <div class="admin-controls">
+    {% if request.user == league.owner %}
+        <a href="{% url 'knockout_setup' league.id %}" class="btn btn-warning btn-floating">
+            ⚙️ إعادة بناء
+        </a>
+
+        <form method="POST" action="{% url 'publish_knockout_to_main' league.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success btn-floating" onclick="return confirm('هل أنت متأكد؟ سيتم نقل المباريات الجاهزة إلى صفحة المواجهات.')">
+                ✅ اعتماد في الجدول
+            </button>
+        </form>
+    {% endif %}
+    
+    <button id="download-bracket-btn" class="btn btn-primary btn-floating">
+        📸 صورة
+    </button>
+</div>
+
+    <div class="text-center mt-4 mb-2">
+        <h2 style="color: var(--phosphor-yellow); text-shadow: 0 0 10px rgba(0,0,0,0.5);">🏆 الأدوار النهائية - {{ league.name }}</h2>
     </div>
 
-    <div class="bracket-container">
-        {% for round_name, matches in rounds.items %}
-        <div class="round">
-            <div class="round-title">{{ round_name }}</div>
-            {% for match in matches %}
-            <div class="match-card">
-                <div class="team-row {% if match.winner == match.team1 %}winner{% endif %}">
-                    <span>
-                        {% if match.team1 %}
-                            <img src="{{ match.team1.logo.url|default:'' }}" width="20" height="20"> {{ match.team1.name }}
-                        {% else %}
-                            ---
-                        {% endif %}
-                    </span>
-                    <span class="badge bg-light text-dark border">{{ match.score1 }}</span>
-                </div>
-                
-                <hr style="margin: 5px 0;">
-
-                <div class="team-row {% if match.winner == match.team2 %}winner{% endif %}">
-                    <span>
-                        {% if match.team2 %}
-                            <img src="{{ match.team2.logo.url|default:'' }}" width="20" height="20"> {{ match.team2.name }}
-                        {% else %}
-                            ---
-                        {% endif %}
-                    </span>
-                    <span class="badge bg-light text-dark border">{{ match.score2 }}</span>
-                </div>
-
-                {% if request.user == league.owner and match.team1 and match.team2 and not match.winner %}
-                <div class="text-center mt-2">
-                    <a href="#" class="btn btn-sm btn-outline-primary py-0" style="font-size: 0.7rem;">تحديث</a>
-                </div>
-                {% endif %}
-            </div>
+    <div class="bracket-wrapper bracket-container">
+        
+        {% if rounds.16 %}
+        <div class="bracket-column">
+            <div class="round-header">دور الـ 16 (A)</div>
+            {% for match in rounds.16|slice:":4" %} 
+                {% include "leagues/includes/match_card_template.html" with match=match %}
             {% endfor %}
         </div>
-        {% endfor %}
-        
-        <div class="round justify-content-center">
-            <div class="round-title">👑 البطل</div>
-            <div class="match-card text-center py-4 border-warning">
-                <h4 class="text-warning">؟</h4>
+        {% endif %}
+
+        {% if rounds.8 %}
+        <div class="bracket-column">
+            <div class="round-header">ربع النهائي (A)</div>
+            {% for match in rounds.8|slice:":2" %} 
+                {% include "leagues/includes/match_card_template.html" with match=match %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if rounds.4 %}
+        <div class="bracket-column">
+            <div class="round-header">نصف النهائي</div>
+            {% for match in rounds.4|slice:":1" %} 
+                {% include "leagues/includes/match_card_template.html" with match=match %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="final-column">
+            <div class="champion-section">
+                {% if league.logo %}
+                    <img src="{{ league.logo }}" class="league-logo-final" alt="League Logo">
+                {% else %}
+                    <div style="font-size: 100px;">🏆</div>
+                {% endif %}
+                <div class="final-badge">MATCH FINAL</div>
+            </div>
+            
+            {% if rounds.2 %}
+                {% for match in rounds.2 %}
+                    <div class="match-card" style="width: 100%; border: 2px solid gold; box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);">
+                        <div class="team-slot {% if match.winner == match.team1 %}winner{% endif %}">
+                            <div class="team-info-flex">
+                                {% if match.team1.logo %}<img src="{{ match.team1.logo.url }}" class="team-logo-mini">{% endif %}
+                                {{ match.team1.name|default:"---" }}
+                            </div>
+                            <span class="score-badge">{{ match.score1 }}</span>
+                        </div>
+                        <div class="team-slot {% if match.winner == match.team2 %}winner{% endif %}">
+                            <div class="team-info-flex">
+                                {% if match.team2.logo %}<img src="{{ match.team2.logo.url }}" class="team-logo-mini">{% endif %}
+                                {{ match.team2.name|default:"---" }}
+                            </div>
+                            <span class="score-badge">{{ match.score2 }}</span>
+                        </div>
+                        {% if request.user == league.owner %}
+                            <div class="text-center mt-1" style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top:5px;">
+                                <a href="{% url 'match_update' match.id %}" class="text-muted small" style="text-decoration: none;">✏️ تحديث النتيجة</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-dark w-100 text-center">لم يتحدد النهائي بعد</div>
+            {% endif %}
+            
+            <div class="mt-4 text-center">
+                <span class="badge bg-warning text-dark p-2 mb-2" style="font-size: 1rem;">👑 بطل الدوري</span>
+                <h2 style="color: white; font-weight: bold; text-shadow: 0 0 10px var(--phosphor-yellow);">
+                    {% if rounds.2.0.winner %}
+                        {{ rounds.2.0.winner.name }}
+                    {% else %}
+                        ؟؟؟
+                    {% endif %}
+                </h2>
             </div>
         </div>
+        {% if rounds.4 %}
+        <div class="bracket-column">
+            <div class="round-header">نصف النهائي</div>
+            {% for match in rounds.4|slice:"1:2" %} 
+                {% include "leagues/includes/match_card_template.html" with match=match %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% if rounds.8 %}
+        <div class="bracket-column">
+            <div class="round-header">ربع النهائي (B)</div>
+            {% for match in rounds.8|slice:"2:4" %} 
+                {% include "leagues/includes/match_card_template.html" with match=match %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if rounds.16 %}
+        <div class="bracket-column">
+            <div class="round-header">دور الـ 16 (B)</div>
+            {% for match in rounds.16|slice:"4:8" %} 
+                {% include "leagues/includes/match_card_template.html" with match=match %}
+            {% endfor %}
+        </div>
+        {% endif %}
+
     </div>
 </div>
-{% endblock %}

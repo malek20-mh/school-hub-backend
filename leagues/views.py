@@ -4,10 +4,12 @@ from django.contrib.auth.decorators import login_required
 from .models import League, Match, GoalScorer, Team, Group, KnockoutMatch
 from .forms import LeagueForm, MatchForm, TeamFormSet, GoalScorerFormSet,  GroupForm, TeamForm
 from django.forms import inlineformset_factory, modelformset_factory
-from django.db.models import Sum 
+from django.db.models import Sum , Count, Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 import math
+from django.utils import timezone
+
 # ---------------------------
 # قائمة الدوريات
 # ---------------------------
@@ -399,102 +401,204 @@ def generate_matches_card(request):
     # إذا لم يكن الطلب POST (مثل الوصول المباشر للرابط)، نوجه المستخدم
     return redirect('league_list')
 
+
 def knockout_setup(request, league_id):
     league = get_object_or_404(League, id=league_id)
     
-    # 1. إذا تم إرسال النموذج (الضغط على زر إنشاء الشجرة)
     if request.method == 'POST':
         selected_team_ids = request.POST.getlist('selected_teams')
-        
-        # التأكد أن العدد هو من مضاعفات 2 (4, 8, 16, 32)
         count = len(selected_team_ids)
+        
         if count not in [4, 8, 16, 32]:
-            messages.error(request, f"عدد الفرق المختارة ({count}) غير صحيح! يجب أن يكون 4، 8، 16، أو 32 لعمل شجرة متوازنة.")
+            messages.error(request, f"العدد ({count}) غير مدعوم حالياً. اختر 4، 8، 16، أو 32.")
             return redirect('knockout_setup', league_id=league.id)
 
-        # حذف أي شجرة سابقة لهذا الدوري (اختياري، لبدء جديد)
+        # 1. تنظيف الشجرة القديمة
         KnockoutMatch.objects.filter(league=league).delete()
 
-        # جلب كائنات الفرق المختارة
-        teams = list(Team.objects.filter(id__in=selected_team_ids))
+        # 2. جلب الفرق المختارة
+        teams = Team.objects.filter(id__in=selected_team_ids)
         
-        # --- خوارزمية التوزيع (الأول ضد الثاني) ---
-        # نفترض أن القائمة مرتبة حسب المجموعات (A1, A2, B1, B2...)
-        # سنقوم بترتيبهم يدوياً لضمان المواجهة العادلة
-        # في المواقع العالمية: A1 vs B2, C1 vs D2 ... 
+        # 3. تجميع الفرق حسب المجموعات وترتيبهم داخل المجموعة
+        # سنفترض أن المجموعات لها أسماء أو معرفات. سنرتب حسب النقاط.
+        teams_by_group = {}
+        for team in teams:
+            g_id = team.group.id if team.group else 0
+            if g_id not in teams_by_group:
+                teams_by_group[g_id] = []
+            teams_by_group[g_id].append(team)
+
+        # ترتيب الفرق داخل كل مجموعة (الأول، الثاني...)
+        for g_id in teams_by_group:
+            # ترتيب حسب النقاط تنازلياً (يمكنك إضافة فارق الأهداف هنا)
+            teams_by_group[g_id].sort(key=lambda x: getattr(x, 'points', 0), reverse=True)
+
+        # 4. خوارزمية التزويج (Pairing Algorithm)
+        matchups = []
+        groups_ids = list(teams_by_group.keys())
         
-        matches_in_first_round = count // 2
-        round_name = count 
-        
-        # إنشاء المباريات الفارغة لكل الأدوار أولاً
-        current_round_matches = []
-        
-        # الدور الأول (الذي فيه الفرق)
-        for i in range(matches_in_first_round):
-            # محاولة تطبيق منطق: الأول من مجموعة يواجه الثاني من التالية
-            # هذه مصفوفة بسيطة للمواجهات: الفريق i يواجه الفريق i+1 (إذا كانت القائمة مرتبة)
-            # سنعتمد على ترتيب الآدمن في القائمة
+        # سيناريو 4 فرق (نصف نهائي مباشرة)
+        if count == 4 and len(groups_ids) >= 2:
+            # الأول من A ضد الثاني من B
+            g1 = teams_by_group[groups_ids[0]]
+            g2 = teams_by_group[groups_ids[1]]
+            # التأكد من وجود فريقين في كل مجموعة
+            if len(g1) >= 2 and len(g2) >= 2:
+                matchups.append((g1[0], g2[1])) # 1st A vs 2nd B
+                matchups.append((g2[0], g1[1])) # 1st B vs 2nd A
+            else:
+                # توزيع عشوائي إذا لم تكتمل الشروط
+                matchups.append((g1[0], g2[0]))
+                matchups.append((g1[1] if len(g1)>1 else g2[1], g2[1] if len(g2)>1 else g1[1]))
+
+        # سيناريو 8 فرق أو أكثر (نظام المقص: الأول ضد الأخير)
+        else:
+            # دمج القوائم بطريقة تسمح بالمواجهة العكسية
+            # سنقوم بجمع كل "الأوائل" وكل "الثواني" ...
+            # الطريقة الأبسط والأشهر: دمج المجموعات المتقابلة (A مع B)
             
-            t1 = teams[i * 2]     # الفريق الزوجي (مثلاً الأول)
-            t2 = teams[i * 2 + 1] # الفريق الفردي (مثلاً الثاني)
-            
-            match = KnockoutMatch.objects.create(
+            processed_groups = []
+            for i in range(0, len(groups_ids), 2):
+                if i+1 < len(groups_ids):
+                    gA = teams_by_group[groups_ids[i]]
+                    gB = teams_by_group[groups_ids[i+1]]
+                    
+                    # عدد المتأهلين من كل مجموعة
+                    n = len(gA) 
+                    for j in range(n):
+                        # الأول (index 0) يواجه الأخير (index n-1-j)
+                        # مثال: 4 فرق. 0 vs 3, 1 vs 2
+                        if j < len(gB):
+                            t1 = gA[j]
+                            t2 = gB[len(gB)-1-j] # عكسي من المجموعة الأخرى
+                            matchups.append((t1, t2))
+                else:
+                    # مجموعة فردية بقيت (نادرة)، نزاوجها داخلياً
+                    g = teams_by_group[groups_ids[i]]
+                    for j in range(len(g)//2):
+                        matchups.append((g[j], g[len(g)-1-j]))
+
+        # 5. إنشاء المباريات في قاعدة البيانات
+        round_name = count
+        current_matches_objs = []
+        
+        for i, (t1, t2) in enumerate(matchups):
+            m = KnockoutMatch.objects.create(
                 league=league,
                 round_number=round_name,
-                match_order=i + 1,
+                match_order=i+1,
                 team1=t1,
                 team2=t2
             )
-            current_round_matches.append(match)
+            current_matches_objs.append(m)
 
-        # إنشاء الأدوار التالية فارغة وربطها
-        previous_round_matches = current_round_matches
-        next_round_count = round_name // 2
+        # 6. إنشاء الأدوار التالية فارغة (الهيكل العظمي للشجرة)
+        previous_round_matches = current_matches_objs
+        next_round = count // 2
         
-        while next_round_count >= 2: # حتى نصل للنهائي
+        while next_round >= 2: # 2 يعني النهائي
             new_round_matches = []
             for i in range(0, len(previous_round_matches), 2):
-                # ننشئ مباراة في الدور التالي تستقبل الفائزين من المباراتين السابقتين
                 next_match = KnockoutMatch.objects.create(
                     league=league,
-                    round_number=next_round_count,
+                    round_number=next_round,
                     match_order=(i // 2) + 1
                 )
                 
-                # ربط المباراتين السابقتين بهذه المباراة الجديدة
-                m1 = previous_round_matches[i]
-                m2 = previous_round_matches[i+1]
+                # ربط الفائزين
+                if i < len(previous_round_matches):
+                    previous_round_matches[i].next_match = next_match
+                    previous_round_matches[i].save()
                 
-                m1.next_match = next_match
-                m1.save()
-                
-                m2.next_match = next_match
-                m2.save()
+                if i+1 < len(previous_round_matches):
+                    previous_round_matches[i+1].next_match = next_match
+                    previous_round_matches[i+1].save()
                 
                 new_round_matches.append(next_match)
             
             previous_round_matches = new_round_matches
-            next_round_count //= 2
+            next_round //= 2
 
-        messages.success(request, "تم إنشاء شجرة الدوري بنجاح! 🌳")
+        messages.success(request, "تم إنشاء الشجرة بنظام المواجهات العكسية (المقص) ✂️")
         return redirect('league_knockout', league_id=league.id)
 
-    # 2. عرض الصفحة (GET): جلب الفرق مرتبة
-    # نجلب الفرق ونرتبها حسب المجموعات والنقاط ليختار منها الآدمن بسهولة
-    teams = Team.objects.filter(league=league).order_by('group', 'name')
-    return render(request, 'leagues/knockout_setup.html', {'league': league, 'teams': teams})
-
-# فيو لعرض الشجرة
-def league_knockout(request, league_id):
-    league = get_object_or_404(League, id=league_id)
-    matches = KnockoutMatch.objects.filter(league=league).order_by('-round_number', 'match_order')
-    
-    # تجميع المباريات حسب الدور للعرض
-    rounds = {}
-    for match in matches:
-        r_name = match.get_round_number_display()
-        if r_name not in rounds:
-            rounds[r_name] = []
-        rounds[r_name].append(match)
+    # GET Request
+    all_teams = list(Team.objects.filter(league=league))
+    # ترتيب للعرض فقط
+    try:
+        all_teams.sort(key=lambda t: (t.group.name if t.group else '', -getattr(t, 'points', 0)))
+    except:
+        all_teams.sort(key=lambda t: (t.group.name if t.group else '', t.name))
         
-    return render(request, 'leagues/knockout_view.html', {'league': league, 'rounds': rounds})
+    return render(request, 'leagues/knockout_setup.html', {'league': league, 'teams': all_teams})
+# فيو لعرض الشجرة
+def publish_knockout(request, league_id):
+    league = get_object_or_404(League, id=league_id)
+    if request.user != league.owner:
+        return redirect('league_knockout', league_id=league.id)
+    
+    if request.method == 'POST':
+        # جلب مباريات الشجرة التي لها أطراف (ليست فارغة)
+        ko_matches = KnockoutMatch.objects.filter(league=league).exclude(team1=None).exclude(team2=None)
+        
+        count = 0
+        for ko in ko_matches:
+            # التحقق مما إذا كانت موجودة مسبقاً في الجدول الرئيسي لتجنب التكرار
+            # يمكنك استخدام منطق للتحقق، هنا سنضيفها ببساطة
+            
+            Match.objects.create(
+                league=league,
+                home_team=ko.team1,
+                away_team=ko.team2,
+                date=timezone.now(), # تاريخ افتراضي، يجب تعديله لاحقاً
+                round_name=ko.get_round_number_display(),
+                is_finished=False
+            )
+            count += 1
+            
+        messages.success(request, f"تم نشر {count} مباراة إلى جدول المباريات الرئيسي بنجاح! ✅")
+        return redirect('league_matches', league_id=league.id)
+
+
+def publish_knockout_to_main(request, league_id):
+    league = get_object_or_404(League, id=league_id)
+    
+    # التحقق من أن المستخدم هو المالك
+    if request.user != league.owner:
+        messages.error(request, "غير مسموح لك بهذا الإجراء")
+        return redirect('league_knockout', league_id=league.id)
+
+    if request.method == 'POST':
+        # 1. جلب مباريات الشجرة المكتملة (التي فيها فريقين)
+        ko_matches = KnockoutMatch.objects.filter(league=league).exclude(team1=None).exclude(team2=None)
+        
+        counter = 0
+        for ko in ko_matches:
+            # 2. التحقق: هل هذه المباراة موجودة مسبقاً في الجدول الرئيسي؟ لتجنب التكرار
+            exists = Match.objects.filter(
+                league=league,
+                home_team=ko.team1,
+                away_team=ko.team2,
+                round_name=ko.get_round_number_display() # مثل "ربع النهائي"
+            ).exists()
+            
+            # 3. إذا لم تكن موجودة، قم بإنشائها
+            if not exists:
+                Match.objects.create(
+                    league=league,
+                    home_team=ko.team1,
+                    away_team=ko.team2,
+                    round_name=ko.get_round_number_display(), # اسم الدور
+                    date=timezone.now(), # تاريخ افتراضي (يمكنك تعديله لاحقاً من صفحة المباريات)
+                    is_finished=False
+                )
+                counter += 1
+        
+        if counter > 0:
+            messages.success(request, f"تم ترحيل {counter} مباراة من الشجرة إلى جدول المواجهات بنجاح! ✅")
+        else:
+            messages.info(request, "لم يتم ترحيل أي مباراة (ربما هي موجودة بالفعل أو الشجرة فارغة).")
+            
+        return redirect('league_matches', league_id=league.id)
+        
+    return redirect('league_knockout', league_id=league.id)

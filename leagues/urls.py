@@ -18,4 +18,6 @@ urlpatterns = [
     path('matches/card/generate/', views.generate_matches_card, name='generate_matches_card'),
     path('<int:league_id>/knockout/setup/', views.knockout_setup, name='knockout_setup'),
     path('<int:league_id>/knockout/', views.league_knockout, name='league_knockout'),
+    path('<int:league_id>/knockout/publish/', views.publish_knockout, name='publish_knockout'),
+    path('<int:league_id>/knockout/publish-to-main/', views.publish_knockout_to_main, name='publish_knockout_to_main'),
 ]
